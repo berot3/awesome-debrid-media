@@ -1,0 +1,32 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - master
+      - 'work/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Validate curated data
+        run: python3 scripts/validate.py
+
+      - name: Build static site
+        run: python3 scripts/build.py
+
+      - name: Verify build output
+        run: test -s dist/index.html

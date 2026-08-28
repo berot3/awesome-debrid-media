@@ -1,0 +1,93 @@
+name: Add a project
+description: Suggest a relevant self-hosted media server, backend, bridge, plugin, or media-automation system.
+title: "Add: "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping expand Awesome Debrid Media. Inclusion is based on relevance and evidence, not endorsement.
+
+  - type: input
+    id: project
+    attributes:
+      label: Project name
+      placeholder: Example Project
+    validations:
+      required: true
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: Prefer the canonical upstream repository.
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: Best-fit architecture
+      options:
+        - Full media server
+        - Streaming backend
+        - Jellyfin-compatible server
+        - Bridge
+        - Media automation / VFS
+        - Media-server plugin
+        - Other / unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: relevance
+    attributes:
+      label: Why is it relevant?
+      description: Explain how it fits the Debrid/Usenet media-server/backend ecosystem.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: aiostreams
+    attributes:
+      label: AIOStreams relationship
+      description: Choose conservatively. “I could not find it” is not the same as “not supported.”
+      options:
+        - Explicit AIOStreams integration
+        - Generic Stremio-addon integration
+        - Plugin / bridge integration
+        - Unconfirmed / unsure
+        - No first-party support with evidence
+        - Documented scope conflict
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link official docs, source code, README, issues/PRs/releases, or direct maintainer statements that support the important claims.
+      placeholder: |
+        - https://github.com/owner/repo/blob/main/README.md — documents ...
+        - https://github.com/owner/repo/blob/main/path/to/source — implements ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: clients
+    attributes:
+      label: Client / TV notes
+      description: Include Apple TV/tvOS, Android TV, web, or Jellyfin/Emby/Plex client paths if known. Distinguish source code from a public release.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I understand that a missing search result is not proof that a feature is unsupported.
+          required: true
+        - label: I have linked evidence for the claims I am asking the project to publish.
+          required: true

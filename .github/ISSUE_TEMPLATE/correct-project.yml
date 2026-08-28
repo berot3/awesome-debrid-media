@@ -1,0 +1,64 @@
+name: Correct project information
+description: Report stale, incorrect, or insufficiently supported information in the comparison.
+title: "Correction: "
+labels: []
+body:
+  - type: input
+    id: project
+    attributes:
+      label: Project
+      placeholder: Project name or owner/repo
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: What is currently wrong or stale?
+      description: Quote or summarize the field/classification that needs correction.
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction
+    attributes:
+      label: Proposed correction
+      description: State the smallest factual change that the current evidence supports.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Current evidence
+      description: Prefer current first-party documentation or source code. Explain what each source establishes.
+      placeholder: |
+        - https://github.com/owner/repo/blob/main/README.md — now documents ...
+        - https://github.com/owner/repo/releases/... — public tvOS release now exists ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Main correction type
+      options:
+        - AIOStreams classification
+        - Architecture / dependency
+        - Debrid / Usenet support
+        - Apple TV / client availability
+        - Jellyfin-compatible API
+        - Project status / canonical repository
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: semantics
+    attributes:
+      label: Classification check
+      options:
+        - label: I have not treated “not found” as “not supported.”
+          required: true
+        - label: If this changes a client release state, the evidence distinguishes source code from an installable public release.
+          required: false
