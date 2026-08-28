@@ -204,6 +204,19 @@ def validate_project(project: object, index: int) -> str:
         validate_client(clients[platform], f"{path}.clients.{platform}")
 
     validate_evidence_list(project["evidence"], f"{path}.evidence")
+    general_capabilities = (
+        project["stremio_protocol"],
+        sources["debrid"],
+        sources["usenet"],
+        sources["local_media"],
+        api["jellyfin_compatible"],
+    )
+    if any(value != "unknown" for value in general_capabilities):
+        require(
+            project["evidence"],
+            f"{path}.evidence is required when general capabilities are confirmed as yes or no",
+        )
+
     validate_iso_date(project["verified_at"], f"{path}.verified_at")
 
     forbidden = find_forbidden_keys(project, path)
