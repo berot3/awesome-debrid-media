@@ -1,4 +1,491 @@
 {
   "schema_version": 1,
-  "projects": []
+  "projects": [
+    {
+      "id": "mediastorm",
+      "name": "MediaStorm",
+      "repository": "godver3/mediastorm",
+      "description": "Independent streaming media server with its own backend and first-party mobile/TV apps, focused on Debrid and Usenet streaming.",
+      "architecture": "full_media_server",
+      "dependency": "independent",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "AIOStreams is explicitly listed as a supported scraper and has a dedicated backend scraper implementation.",
+        "evidence": [
+          {
+            "claim": "The official README lists AIOStreams under supported scraping sources.",
+            "url": "https://github.com/godver3/mediastorm/blob/master/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-28"
+          },
+          {
+            "claim": "The backend contains a dedicated AIOStreams scraper implementation.",
+            "url": "https://github.com/godver3/mediastorm/blob/master/backend/services/debrid/scraper_aiostreams.go",
+            "source_type": "source_code",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "unknown",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": ["Real-Debrid", "TorBox", "AllDebrid"],
+        "usenet": "yes",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "released_first_party",
+          "note": "First-party tvOS app is distributed through TestFlight.",
+          "evidence": [
+            {
+              "claim": "The official README documents a tvOS TestFlight build.",
+              "url": "https://github.com/godver3/mediastorm/blob/master/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "android_tv": {
+          "state": "released_first_party",
+          "note": "First-party Android TV APK is publicly linked from the README.",
+          "evidence": [
+            {
+              "claim": "The official README links an Android TV APK and release history.",
+              "url": "https://github.com/godver3/mediastorm/blob/master/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "An admin web UI is documented; a first-party browser playback client was not separately verified.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes MediaStorm as a streaming media server that requires both backend and frontend, with Debrid and Usenet support.",
+          "url": "https://github.com/godver3/mediastorm/blob/master/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "remux",
+      "name": "Remux",
+      "repository": "lostb1t/remux",
+      "description": "Independent Rust media server exposing a Jellyfin-compatible API and combining Stremio add-ons, local files, WebDAV, and torrent sources.",
+      "architecture": "jellyfin_compatible_server",
+      "dependency": "independent",
+      "aiostreams": {
+        "state": "stremio_protocol",
+        "note": "Remux implements a generic Stremio-addon preset; its source explicitly says the preset includes AIO rather than implementing a separate AIOStreams-only provider.",
+        "evidence": [
+          {
+            "claim": "The Stremio preset accepts any addon speaking the Stremio addon protocol and explicitly says it includes AIO.",
+            "url": "https://github.com/lostb1t/remux/blob/main/crates/remux-server/src/addons/stremio.rs",
+            "source_type": "source_code",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "unknown",
+        "local_media": "yes"
+      },
+      "api": {
+        "jellyfin_compatible": "yes"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "compatible_third_party",
+          "note": "Remux documents Infuse as a compatible Jellyfin client; Infuse is available on Apple TV.",
+          "evidence": [
+            {
+              "claim": "The Remux README lists Infuse among compatible Jellyfin clients.",
+              "url": "https://github.com/lostb1t/remux/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            },
+            {
+              "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
+              "url": "https://firecore.com/infuse",
+              "source_type": "official_docs",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "The README names Jellyfin for Android but Android TV coverage was not separately verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "Jellyfin-compatible client coverage is broad, but browser playback compatibility was not separately verified for this record.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes Remux as a self-hosted Jellyfin-compatible media server with Stremio add-ons, local files, WebDAV, and torrents.",
+          "url": "https://github.com/lostb1t/remux/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "fetcherr",
+      "name": "Fetcherr",
+      "repository": "goneturbo/fetcherr",
+      "description": "Jellyfin-compatible streaming bridge for clients such as Infuse and VidHub, resolving playback through Debrid streams returned by Stremio add-ons.",
+      "architecture": "bridge",
+      "dependency": "independent",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "AIOStreams is explicitly documented as a supported Stremio add-on provider, including setup guidance and direct-playable-URL handling.",
+        "evidence": [
+          {
+            "claim": "The official README requires a playable Stremio add-on and names AIOStreams, then documents AIOStreams-specific setup and playback behavior.",
+            "url": "https://github.com/goneturbo/fetcherr/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": ["Real-Debrid", "TorBox"],
+        "usenet": "unknown",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "yes"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "compatible_third_party",
+          "note": "Fetcherr explicitly targets Infuse; Infuse is available on Apple TV.",
+          "evidence": [
+            {
+              "claim": "The official README describes Fetcherr as a Jellyfin-compatible streaming bridge for Infuse and documents connecting Infuse.",
+              "url": "https://github.com/goneturbo/fetcherr/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            },
+            {
+              "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
+              "url": "https://firecore.com/infuse",
+              "source_type": "official_docs",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "No Android TV client path was verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "Fetcherr has web setup/settings UI, but browser playback was not verified as a first-party client path.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes Jellyfin-compatible search/playback, Real-Debrid or TorBox resolution, and Infuse/VidHub client paths.",
+          "url": "https://github.com/goneturbo/fetcherr/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "hound",
+      "name": "Hound",
+      "repository": "Hound-Media-Server/hound",
+      "homepage": "https://hound-media-server.github.io/hound-site/",
+      "description": "Independent hybrid media server combining a traditional self-hosted library with instant P2P, Debrid, Usenet, and IPTV streaming.",
+      "architecture": "full_media_server",
+      "dependency": "independent",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "The official README explicitly names AIOStreams for P2P, HTTP/Debrid, and Usenet streaming through Stremio add-ons.",
+        "evidence": [
+          {
+            "claim": "The Hound README explicitly says content can be streamed from P2P, HTTP/Debrid sources and Usenet through Stremio addons (AIOStreams).",
+            "url": "https://github.com/Hound-Media-Server/hound/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "yes",
+        "local_media": "yes"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "source_only_first_party",
+          "note": "Hound says iOS/tvOS share a codebase and can currently be run through Xcode, but are not yet publicly distributed.",
+          "evidence": [
+            {
+              "claim": "The official README says iOS and tvOS are not available yet and can currently only be run through Xcode.",
+              "url": "https://github.com/Hound-Media-Server/hound/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "android_tv": {
+          "state": "released_first_party",
+          "note": "Android TV APKs are published through the Hound app repository releases.",
+          "evidence": [
+            {
+              "claim": "The official README directs users to downloadable Android and Android TV apps in the app repository releases.",
+              "url": "https://github.com/Hound-Media-Server/hound/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "web": {
+          "state": "released_first_party",
+          "note": "Hound includes and documents its own web frontend and public demo.",
+          "evidence": [
+            {
+              "claim": "The README documents a web frontend, development server, and public demo.",
+              "url": "https://github.com/Hound-Media-Server/hound/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes Hound as a fully featured hybrid media server with local media, P2P, HTTP/Debrid, and Usenet streaming.",
+          "url": "https://github.com/Hound-Media-Server/hound/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "riven-rs",
+      "name": "Riven RS",
+      "repository": "olivertgwalton/riven-rs",
+      "description": "Independent community Rust implementation of Riven that automates discovery/resolution and exposes stream-aware media through a FUSE VFS to external media servers.",
+      "architecture": "media_automation_vfs",
+      "dependency": "requires_media_server",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "Riven RS contains a built-in AIOStreams source plugin with its own settings and documentation.",
+        "evidence": [
+          {
+            "claim": "The official plugin documentation describes an AIOStreams scraper that queries a configured AIOStreams instance.",
+            "url": "https://github.com/olivertgwalton/riven-rs/blob/main/docs/plugins/aiostreams.md",
+            "source_type": "official_docs",
+            "checked_at": "2026-08-28"
+          },
+          {
+            "claim": "The Riven RS README lists AIOStreams among built-in torrent scraper plugins.",
+            "url": "https://github.com/olivertgwalton/riven-rs/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "unknown",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "yes",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to the external media server; Apple TV support depends on that chosen media-server/client stack.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to the external media server; Android TV support depends on that chosen media-server/client stack.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "Riven has its own management frontend, while media playback is delegated to an external media server.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes FUSE output for Jellyfin, Emby, Plex, or other media servers and built-in plugins for Debrid and Usenet.",
+          "url": "https://github.com/olivertgwalton/riven-rs/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "riven-ts",
+      "name": "Riven TS",
+      "repository": "rivenmedia/riven-ts",
+      "homepage": "https://riven.tv/",
+      "description": "Official Riven rewrite: self-hosted media automation using Debrid, StremThru, a FUSE VFS, and external Plex or Jellyfin media servers.",
+      "architecture": "media_automation_vfs",
+      "dependency": "requires_media_server",
+      "aiostreams": {
+        "state": "unconfirmed",
+        "note": "Current official documentation names Torrentio and Comet for scraping and StremThru for Debrid. No current first-party AIOStreams integration was confirmed during this review.",
+        "evidence": []
+      },
+      "stremio_protocol": "unknown",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": ["Real-Debrid", "AllDebrid", "TorBox"],
+        "usenet": "unknown",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to Plex or Jellyfin; Apple TV support depends on the selected downstream media-server/client stack.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to Plex or Jellyfin; Android TV support depends on the selected downstream media-server/client stack.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "Riven exposes management APIs/UI, while playback is delegated to the media server.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "Official Riven TS documentation describes the pipeline as Torrentio/Comet to StremThru/Debrid to FUSE VFS to Plex or Jellyfin.",
+          "url": "https://github.com/rivenmedia/riven-ts/blob/main/apps/wiki/content/docs/index.mdx",
+          "source_type": "official_docs",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "silo",
+      "name": "Silo",
+      "repository": "Silo-Server/silo-server",
+      "description": "Independent self-hosted media server for operator-controlled on-disk libraries, with a built-in web app and Jellyfin/Emby-compatible API.",
+      "architecture": "full_media_server",
+      "dependency": "independent",
+      "aiostreams": {
+        "state": "scope_conflict",
+        "note": "AIOStreams is not named in the non-goals document, but an AIOStreams-style remote-stream integration conflicts with Silo's documented permanent exclusion of remote URL shortcut/fetch/proxy/redirect/transcode capabilities in core, plugins, and clients.",
+        "evidence": [
+          {
+            "claim": "Silo's permanent non-goals exclude .strm and equivalent remote media URL shortcuts, including fetching, proxying, redirecting or transcoding those streams, and state this is unavailable in core, plugins, or clients.",
+            "url": "https://github.com/Silo-Server/silo-server/blob/main/docs/non-goals.md",
+            "source_type": "official_docs",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "no",
+      "sources": {
+        "debrid": "no",
+        "debrid_providers": [],
+        "usenet": "no",
+        "local_media": "yes"
+      },
+      "api": {
+        "jellyfin_compatible": "yes"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "compatible_third_party",
+          "note": "Silo explicitly lists Infuse as a Jellyfin/Emby-compatible client; Infuse is available on Apple TV.",
+          "evidence": [
+            {
+              "claim": "The Silo README lists Infuse among clients for its Jellyfin/Emby-compatible API.",
+              "url": "https://github.com/Silo-Server/silo-server/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            },
+            {
+              "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
+              "url": "https://firecore.com/infuse",
+              "source_type": "official_docs",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "The README names compatible clients, but Android TV coverage was not separately verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "released_first_party",
+          "note": "Silo includes its own web app.",
+          "evidence": [
+            {
+              "claim": "The official README explicitly says to use the included web app or the Jellyfin/Emby-compatible API.",
+              "url": "https://github.com/Silo-Server/silo-server/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes Silo as a self-hosted media server for on-disk media with an included web app and Jellyfin/Emby-compatible API.",
+          "url": "https://github.com/Silo-Server/silo-server/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        },
+        {
+          "claim": "The non-goals document says Silo indexes and plays media that exists on disk in an operator-controlled library and permanently excludes remote-stream shortcuts.",
+          "url": "https://github.com/Silo-Server/silo-server/blob/main/docs/non-goals.md",
+          "source_type": "official_docs",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    }
+  ]
 }
