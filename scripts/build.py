@@ -102,6 +102,14 @@ def evidence_html(project: dict) -> str:
     return f"<ul class=\"evidence-list\">{''.join(items)}</ul>"
 
 
+def project_details_html(project: dict) -> str:
+    return (
+        f"<p><strong>AIOStreams:</strong> {esc(project['aiostreams']['note'])}</p>"
+        f"<p><strong>Apple TV:</strong> {esc(project['clients']['apple_tv']['note'])}</p>"
+        f"{evidence_html(project)}"
+    )
+
+
 def github_html(metadata: dict) -> tuple[str, str, str]:
     stars = metadata.get("stargazers_count")
     pushed_at = metadata.get("pushed_at")
@@ -168,9 +176,7 @@ def project_card(project: dict, metadata: dict) -> str:
         <p class="small"><strong>GitHub:</strong> {esc(stars)} · last push {esc(pushed)} · <strong>verified:</strong> {esc(project['verified_at'])}</p>
         <details>
           <summary>Evidence &amp; notes</summary>
-          <p><strong>AIOStreams:</strong> {esc(project['aiostreams']['note'])}</p>
-          <p><strong>Apple TV:</strong> {esc(project['clients']['apple_tv']['note'])}</p>
-          {evidence_html(project)}
+          {project_details_html(project)}
         </details>
       </article>
     """
@@ -183,8 +189,12 @@ def project_row(project: dict, metadata: dict) -> str:
     dependency = "Independent" if project["dependency"] == "independent" else "External server / plugin"
     archived_mark = " · archived" if archived else ""
     return f"""
-      <tr class="filterable" {data_attrs(project)}>
-        <th scope="row"><a href="https://github.com/{esc(project['repository'])}">{esc(project['name'])}</a><small>{esc(project['repository'])}</small></th>
+      <tr id="project-{esc(project['id'])}" class="filterable" {data_attrs(project)}>
+        <th scope="row">
+          <a href="https://github.com/{esc(project['repository'])}">{esc(project['name'])}</a>
+          <small>{esc(project['repository'])}</small>
+          <a class="table-evidence-link" href="#evidence-{esc(project['id'])}" aria-label="Evidence &amp; notes for {esc(project['name'])}">Evidence &amp; notes</a>
+        </th>
         <td>{esc(ARCHITECTURE_LABELS[project['architecture']])}</td>
         <td>{esc(aio)}</td>
         <td>{esc(CAPABILITY_LABELS[project['sources']['debrid']])}</td>
@@ -198,6 +208,16 @@ def project_row(project: dict, metadata: dict) -> str:
     """
 
 
+def project_detail(project: dict) -> str:
+    return f"""
+      <article id="evidence-{esc(project['id'])}" class="desktop-project-detail filterable" aria-labelledby="evidence-{esc(project['id'])}-heading" {data_attrs(project)}>
+        <h3 id="evidence-{esc(project['id'])}-heading">{esc(project['name'])}</h3>
+        {project_details_html(project)}
+        <a class="detail-back-link" href="#project-{esc(project['id'])}">Back to {esc(project['name'])} comparison row</a>
+      </article>
+    """
+
+
 def main() -> int:
     with DATA_FILE.open("r", encoding="utf-8") as handle:
         data = json.load(handle)
@@ -206,6 +226,7 @@ def main() -> int:
     metadata = {project["id"]: github_metadata(project["repository"]) for project in projects}
     cards = "\n".join(project_card(project, metadata[project["id"]]) for project in projects)
     rows = "\n".join(project_row(project, metadata[project["id"]]) for project in projects)
+    desktop_details = "\n".join(project_detail(project) for project in projects)
 
     document = f"""<!doctype html>
 <html lang="en">
@@ -268,11 +289,20 @@ def main() -> int:
     tbody tr:last-child th, tbody tr:last-child td {{ border-bottom: 0; }}
     tbody th {{ min-width: 155px; }}
     tbody th small, td small {{ display: block; margin-top: .18rem; color: var(--muted); font-weight: 400; }}
+    .table-evidence-link {{ display: inline-block; margin-top: .35rem; font-size: .8rem; font-weight: 650; }}
+    .desktop-project-details {{ display: none; }}
+    .desktop-project-detail {{ scroll-margin-top: 6rem; padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: 1rem; background: Canvas; }}
+    .desktop-project-detail:target {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
+    .desktop-project-detail h3 {{ margin: 0; font-size: 1.05rem; }}
+    .desktop-project-detail p {{ max-width: 90ch; }}
+    .detail-back-link {{ display: inline-block; margin-top: .2rem; font-size: .86rem; font-weight: 650; }}
     .hidden {{ display: none !important; }}
     footer {{ margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .9rem; }}
     @media (min-width: 920px) {{
       .cards {{ display: none; }}
       .table-wrap {{ display: block; }}
+      .desktop-project-details {{ display: grid; gap: .8rem; margin-top: 1.4rem; }}
+      .desktop-project-details > h2 {{ margin: 0; font-size: 1.35rem; }}
       .filters {{ grid-template-columns: 1fr auto; align-items: center; }}
       .filter-row:first-child {{ min-width: 0; }}
     }}
@@ -341,6 +371,11 @@ def main() -> int:
         </tbody>
       </table>
     </div>
+
+    <section class="desktop-project-details" aria-labelledby="desktop-details-heading">
+      <h2 id="desktop-details-heading">Project evidence &amp; notes</h2>
+{desktop_details}
+    </section>
 
     <footer>
       Curated facts come from first-party evidence wherever possible. Volatile GitHub metadata is fetched only during the Pages build and is not stored as project truth.
