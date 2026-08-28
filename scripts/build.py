@@ -77,7 +77,11 @@ def github_metadata(repository: str) -> dict:
 
 
 def evidence_html(project: dict) -> str:
-    entries = project["aiostreams"]["evidence"] + project["evidence"]
+    entries = (
+        project["aiostreams"]["evidence"]
+        + project["clients"]["apple_tv"]["evidence"]
+        + project["evidence"]
+    )
     if not entries:
         return '<p class="muted">No positive evidence is attached to this intentionally unconfirmed state.</p>'
 
