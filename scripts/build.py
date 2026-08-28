@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Build the static Awesome Debrid Media site from curated project data."""
+"""Build the static Awesome Debrid Media comparison site."""
 
 from __future__ import annotations
 
 import html
 import json
+import os
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,38 +15,182 @@ DATA_FILE = ROOT / "data" / "projects.json"
 DIST_DIR = ROOT / "dist"
 
 AIO_LABELS = {
-    "explicit": "Confirmed",
-    "stremio_protocol": "Stremio protocol",
-    "plugin_or_bridge": "Plugin / bridge",
-    "unconfirmed": "Unconfirmed",
-    "none": "No first-party support",
-    "scope_conflict": "Scope conflict",
+    "explicit": "✅ Explicit",
+    "stremio_protocol": "🔵 Stremio protocol",
+    "plugin_or_bridge": "🟣 Plugin / bridge",
+    "unconfirmed": "🟡 Unconfirmed",
+    "none": "⚪ No first-party support",
+    "scope_conflict": "⛔ Scope conflict",
+}
+ARCHITECTURE_LABELS = {
+    "full_media_server": "Full media server",
+    "streaming_backend": "Streaming backend",
+    "jellyfin_compatible_server": "Jellyfin-compatible server",
+    "bridge": "Bridge",
+    "media_automation_vfs": "Automation / VFS",
+    "media_server_plugin": "Media-server plugin",
+    "other": "Other",
+}
+CLIENT_LABELS = {
+    "released_first_party": "✅ First-party release",
+    "source_only_first_party": "🧪 First-party source only",
+    "compatible_third_party": "🔗 Compatible third-party client",
+    "unconfirmed": "🟡 Unconfirmed",
+    "none": "⚪ None",
+}
+CAPABILITY_LABELS = {"yes": "✅ Yes", "no": "⚪ No", "unknown": "🟡 Unknown"}
+EXTERNAL_DEPENDENCIES = {
+    "requires_jellyfin",
+    "requires_plex",
+    "requires_emby",
+    "requires_media_server",
+    "plugin_for_jellyfin",
 }
 
 
-def project_card(project: dict) -> str:
-    name = html.escape(project["name"])
-    repo = html.escape(project["repository"])
-    description = html.escape(project["description"])
-    architecture = html.escape(project["architecture"].replace("_", " "))
+def esc(value: object) -> str:
+    return html.escape(str(value), quote=True)
+
+
+def github_metadata(repository: str) -> dict:
+    if os.getenv("FETCH_GITHUB_METADATA") != "1":
+        return {}
+
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{repository}",
+        headers={
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "awesome-debrid-media-build",
+            **(
+                {"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}"}
+                if os.getenv("GITHUB_TOKEN")
+                else {}
+            ),
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            return json.load(response)
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+        print(f"warning: GitHub metadata unavailable for {repository}: {exc}")
+        return {}
+
+
+def evidence_html(project: dict) -> str:
+    entries = project["aiostreams"]["evidence"] + project["evidence"]
+    if not entries:
+        return '<p class="muted">No positive evidence is attached to this intentionally unconfirmed state.</p>'
+
+    seen: set[tuple[str, str]] = set()
+    items: list[str] = []
+    for entry in entries:
+        key = (entry["claim"], entry["url"])
+        if key in seen:
+            continue
+        seen.add(key)
+        items.append(
+            "<li>"
+            f"{esc(entry['claim'])} "
+            f"<a href=\"{esc(entry['url'])}\">source</a> "
+            f"<span class=\"evidence-type\">{esc(entry['source_type'].replace('_', ' '))}</span>"
+            "</li>"
+        )
+    return f"<ul class=\"evidence-list\">{''.join(items)}</ul>"
+
+
+def github_html(metadata: dict) -> tuple[str, str, str]:
+    stars = metadata.get("stargazers_count")
+    pushed_at = metadata.get("pushed_at")
+    archived = metadata.get("archived")
+    stars_text = f"⭐ {stars:,}" if isinstance(stars, int) else "—"
+    pushed_text = pushed_at[:10] if isinstance(pushed_at, str) and len(pushed_at) >= 10 else "—"
+    archived_text = "Archived" if archived is True else ""
+    return stars_text, pushed_text, archived_text
+
+
+def search_blob(project: dict) -> str:
+    providers = " ".join(project["sources"]["debrid_providers"])
+    return " ".join(
+        [
+            project["name"],
+            project["repository"],
+            project["description"],
+            project["architecture"],
+            providers,
+        ]
+    ).lower()
+
+
+def data_attrs(project: dict) -> str:
+    apple = project["clients"]["apple_tv"]["state"]
+    return " ".join(
+        [
+            f'data-search="{esc(search_blob(project))}"',
+            f'data-aio="{esc(project["aiostreams"]["state"])}"',
+            f'data-apple="{esc(apple)}"',
+            f'data-usenet="{esc(project["sources"]["usenet"])}"',
+            f'data-jellyfin="{esc(project["api"]["jellyfin_compatible"])}"',
+            f'data-dependency="{esc(project["dependency"])}"',
+        ]
+    )
+
+
+def project_card(project: dict, metadata: dict) -> str:
     aio_state = project["aiostreams"]["state"]
-    aio_label = html.escape(AIO_LABELS[aio_state])
-    verified = html.escape(project["verified_at"])
-    repo_url = f"https://github.com/{repo}"
+    apple_state = project["clients"]["apple_tv"]["state"]
+    stars, pushed, archived = github_html(metadata)
+    providers = ", ".join(project["sources"]["debrid_providers"]) or "Not specified"
+    archived_badge = '<span class="pill pill--warning">Archived</span>' if archived else ""
 
     return f"""
-      <article class="project-card">
-        <div class="project-card__header">
-          <h2>{name}</h2>
-          <span class="status status--{html.escape(aio_state)}">{aio_label}</span>
+      <article class="project-card filterable" {data_attrs(project)}>
+        <div class="project-card__topline">
+          <div>
+            <h2><a href="https://github.com/{esc(project['repository'])}">{esc(project['name'])}</a></h2>
+            <a class="repo-link" href="https://github.com/{esc(project['repository'])}">{esc(project['repository'])} (GH)</a>
+          </div>
+          {archived_badge}
         </div>
-        <p>{description}</p>
-        <dl>
-          <div><dt>Architecture</dt><dd>{architecture}</dd></div>
-          <div><dt>Repository</dt><dd><a href="{repo_url}">{repo}</a></dd></div>
-          <div><dt>Verified</dt><dd>{verified}</dd></div>
-        </dl>
+        <p>{esc(project['description'])}</p>
+        <div class="status-grid">
+          <div><span>Architecture</span><strong>{esc(ARCHITECTURE_LABELS[project['architecture']])}</strong></div>
+          <div><span>AIOStreams</span><strong>{esc(AIO_LABELS[aio_state])}</strong></div>
+          <div><span>Debrid</span><strong>{esc(CAPABILITY_LABELS[project['sources']['debrid']])}</strong></div>
+          <div><span>Usenet</span><strong>{esc(CAPABILITY_LABELS[project['sources']['usenet']])}</strong></div>
+          <div><span>Apple TV</span><strong>{esc(CLIENT_LABELS[apple_state])}</strong></div>
+          <div><span>Jellyfin API</span><strong>{esc(CAPABILITY_LABELS[project['api']['jellyfin_compatible']])}</strong></div>
+        </div>
+        <p class="small"><strong>Debrid providers:</strong> {esc(providers)}</p>
+        <p class="small"><strong>GitHub:</strong> {esc(stars)} · last push {esc(pushed)} · <strong>verified:</strong> {esc(project['verified_at'])}</p>
+        <details>
+          <summary>Evidence &amp; notes</summary>
+          <p><strong>AIOStreams:</strong> {esc(project['aiostreams']['note'])}</p>
+          <p><strong>Apple TV:</strong> {esc(project['clients']['apple_tv']['note'])}</p>
+          {evidence_html(project)}
+        </details>
       </article>
+    """
+
+
+def project_row(project: dict, metadata: dict) -> str:
+    stars, pushed, archived = github_html(metadata)
+    aio = AIO_LABELS[project["aiostreams"]["state"]]
+    apple = CLIENT_LABELS[project["clients"]["apple_tv"]["state"]]
+    dependency = "Independent" if project["dependency"] == "independent" else "External server / plugin"
+    archived_mark = " · archived" if archived else ""
+    return f"""
+      <tr class="filterable" {data_attrs(project)}>
+        <th scope="row"><a href="https://github.com/{esc(project['repository'])}">{esc(project['name'])}</a><small>{esc(project['repository'])}</small></th>
+        <td>{esc(ARCHITECTURE_LABELS[project['architecture']])}</td>
+        <td>{esc(aio)}</td>
+        <td>{esc(CAPABILITY_LABELS[project['sources']['debrid']])}</td>
+        <td>{esc(CAPABILITY_LABELS[project['sources']['usenet']])}</td>
+        <td>{esc(apple)}</td>
+        <td>{esc(CAPABILITY_LABELS[project['api']['jellyfin_compatible']])}</td>
+        <td>{esc(dependency)}</td>
+        <td>{esc(stars)}{esc(archived_mark)}<small>push {esc(pushed)}</small></td>
+        <td>{esc(project['verified_at'])}</td>
+      </tr>
     """
 
 
@@ -52,9 +199,9 @@ def main() -> int:
         data = json.load(handle)
 
     projects = data["projects"]
-    cards = "\n".join(project_card(project) for project in projects)
-    if not cards:
-        cards = '<p class="empty-state">The comparison dataset is being researched. Project records will appear here once evidence review is complete.</p>'
+    metadata = {project["id"]: github_metadata(project["repository"]) for project in projects}
+    cards = "\n".join(project_card(project, metadata[project["id"]]) for project in projects)
+    rows = "\n".join(project_row(project, metadata[project["id"]]) for project in projects)
 
     document = f"""<!doctype html>
 <html lang="en">
@@ -65,23 +212,72 @@ def main() -> int:
   <title>Awesome Debrid Media</title>
   <meta name="description" content="Evidence-based comparison of self-hosted media servers, streaming backends and bridges for Debrid and Usenet.">
   <style>
-    :root {{ font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.5; }}
-    body {{ margin: 0; }}
-    main {{ width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0 5rem; }}
-    h1 {{ margin-bottom: .5rem; font-size: clamp(2rem, 7vw, 4rem); line-height: 1; }}
-    .lede {{ max-width: 70ch; font-size: 1.1rem; }}
-    .meta {{ margin: 2rem 0; padding: 1rem; border: 1px solid color-mix(in srgb, CanvasText 20%, transparent); border-radius: .75rem; }}
-    .projects {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 1rem; }}
-    .project-card {{ padding: 1rem; border: 1px solid color-mix(in srgb, CanvasText 20%, transparent); border-radius: .9rem; }}
-    .project-card__header {{ display: flex; gap: .75rem; align-items: flex-start; justify-content: space-between; }}
-    .project-card h2 {{ margin: 0; }}
-    .status {{ padding: .2rem .55rem; border: 1px solid currentColor; border-radius: 999px; font-size: .8rem; white-space: nowrap; }}
-    dl {{ margin-bottom: 0; }}
-    dl div {{ display: grid; grid-template-columns: 8rem 1fr; gap: .5rem; margin-top: .4rem; }}
-    dt {{ font-weight: 600; }}
-    dd {{ margin: 0; overflow-wrap: anywhere; }}
-    a {{ color: inherit; }}
-    .empty-state {{ padding: 2rem; border: 1px dashed color-mix(in srgb, CanvasText 35%, transparent); border-radius: .9rem; }}
+    :root {{
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      --border: color-mix(in srgb, CanvasText 16%, transparent);
+      --soft: color-mix(in srgb, CanvasText 6%, Canvas);
+      --muted: color-mix(in srgb, CanvasText 66%, transparent);
+      --accent: #5577ff;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{ margin: 0; background: Canvas; color: CanvasText; }}
+    a {{ color: inherit; text-underline-offset: .18em; }}
+    main {{ width: min(1480px, calc(100% - 2rem)); margin: 0 auto; padding: clamp(2rem, 5vw, 5rem) 0 5rem; }}
+    header {{ max-width: 900px; }}
+    h1 {{ margin: 0 0 .8rem; font-size: clamp(2.5rem, 8vw, 5.7rem); line-height: .94; letter-spacing: -.055em; }}
+    .lede {{ margin: 0; max-width: 72ch; font-size: clamp(1.05rem, 2vw, 1.35rem); color: var(--muted); }}
+    .intro-links {{ display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 1.25rem; font-size: .95rem; }}
+    .notice {{ margin: 2rem 0 1.2rem; padding: 1rem 1.1rem; border: 1px solid var(--border); background: var(--soft); border-radius: 1rem; }}
+    .filters {{ position: sticky; top: 0; z-index: 5; display: grid; gap: .8rem; margin: 1rem 0 1.4rem; padding: .9rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in srgb, Canvas 94%, transparent); backdrop-filter: blur(16px); }}
+    .filter-row {{ display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }}
+    input[type="search"], select, button {{ font: inherit; color: inherit; background: Canvas; border: 1px solid var(--border); border-radius: .7rem; padding: .62rem .75rem; }}
+    input[type="search"] {{ flex: 1 1 260px; min-width: 0; }}
+    select {{ max-width: 100%; }}
+    button {{ cursor: pointer; }}
+    button:hover {{ border-color: var(--muted); }}
+    .check {{ display: inline-flex; align-items: center; gap: .38rem; padding: .35rem .15rem; white-space: nowrap; }}
+    #result-count {{ margin-left: auto; color: var(--muted); font-size: .9rem; }}
+    .cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 1rem; }}
+    .project-card {{ padding: 1.05rem; border: 1px solid var(--border); border-radius: 1rem; background: Canvas; }}
+    .project-card__topline {{ display: flex; justify-content: space-between; gap: .7rem; align-items: flex-start; }}
+    .project-card h2 {{ margin: 0; font-size: 1.35rem; }}
+    .repo-link {{ display: inline-block; margin-top: .15rem; color: var(--muted); font-size: .85rem; text-decoration: none; overflow-wrap: anywhere; }}
+    .pill {{ display: inline-block; border: 1px solid currentColor; border-radius: 999px; padding: .14rem .48rem; font-size: .72rem; }}
+    .pill--warning {{ color: #b05a00; }}
+    .status-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin: 1rem 0; }}
+    .status-grid div {{ min-width: 0; padding: .55rem; border-radius: .7rem; background: var(--soft); }}
+    .status-grid span, .status-grid strong {{ display: block; }}
+    .status-grid span {{ color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }}
+    .status-grid strong {{ margin-top: .12rem; font-size: .86rem; overflow-wrap: anywhere; }}
+    .small {{ font-size: .86rem; color: var(--muted); }}
+    details {{ border-top: 1px solid var(--border); margin-top: .9rem; padding-top: .7rem; }}
+    summary {{ cursor: pointer; font-weight: 650; }}
+    .evidence-list {{ padding-left: 1.2rem; font-size: .86rem; }}
+    .evidence-list li {{ margin: .5rem 0; }}
+    .evidence-type {{ color: var(--muted); font-size: .75rem; }}
+    .muted {{ color: var(--muted); }}
+    .table-wrap {{ display: none; overflow-x: auto; border: 1px solid var(--border); border-radius: 1rem; }}
+    table {{ width: 100%; border-collapse: collapse; font-size: .84rem; }}
+    th, td {{ padding: .72rem .65rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }}
+    thead th {{ position: sticky; top: 0; background: Canvas; white-space: nowrap; }}
+    tbody tr:last-child th, tbody tr:last-child td {{ border-bottom: 0; }}
+    tbody th {{ min-width: 155px; }}
+    tbody th small, td small {{ display: block; margin-top: .18rem; color: var(--muted); font-weight: 400; }}
+    .hidden {{ display: none !important; }}
+    footer {{ margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .9rem; }}
+    @media (min-width: 920px) {{
+      .cards {{ display: none; }}
+      .table-wrap {{ display: block; }}
+      .filters {{ grid-template-columns: 1fr auto; align-items: center; }}
+      .filter-row:first-child {{ min-width: 0; }}
+    }}
+    @media (max-width: 560px) {{
+      main {{ width: min(100% - 1rem, 1480px); }}
+      .filters {{ top: .35rem; }}
+      .status-grid {{ grid-template-columns: 1fr; }}
+      #result-count {{ width: 100%; margin-left: 0; }}
+    }}
   </style>
 </head>
 <body>
@@ -89,15 +285,111 @@ def main() -> int:
     <header>
       <h1>Awesome Debrid Media</h1>
       <p class="lede">A curated, evidence-based comparison of self-hosted media servers, streaming backends, bridges and media-automation systems for Debrid &amp; Usenet.</p>
+      <nav class="intro-links" aria-label="Project links">
+        <a href="https://github.com/berot3/awesome-debrid-media">GitHub repository</a>
+        <a href="https://github.com/berot3/awesome-debrid-media/blob/master/docs/methodology.md">Methodology</a>
+        <a href="https://github.com/berot3/awesome-debrid-media/blob/master/CONTRIBUTING.md">Contribute / correct data</a>
+      </nav>
     </header>
-    <section class="meta" aria-label="About this comparison">
-      <strong>{len(projects)} project(s) in the current curated dataset.</strong>
-      <p>Inclusion is not endorsement. Compatibility claims are classified by evidence, and volatile GitHub metadata is kept separate from manually curated facts.</p>
+
+    <section class="notice">
+      <strong>{len(projects)} evidence-reviewed projects.</strong>
+      Inclusion is not endorsement. “Unconfirmed” means evidence is insufficient, not “unsupported.” GitHub stars are context, never a ranking.
     </section>
-    <section class="projects" aria-label="Projects">
+
+    <section class="filters" aria-label="Comparison filters">
+      <div class="filter-row">
+        <input id="search" type="search" placeholder="Search projects, architecture, providers…" aria-label="Search projects">
+        <select id="aio-filter" aria-label="AIOStreams support">
+          <option value="all">All AIOStreams states</option>
+          <option value="compatible">AIOStreams compatible</option>
+          <option value="unconfirmed">AIOStreams unconfirmed</option>
+          <option value="no-first-party">No first-party / scope conflict</option>
+        </select>
+        <select id="dependency-filter" aria-label="Backend dependency">
+          <option value="all">Any dependency</option>
+          <option value="independent">Independent backend</option>
+          <option value="external">Requires another media server / plugin host</option>
+        </select>
+      </div>
+      <div class="filter-row">
+        <label class="check"><input id="apple-filter" type="checkbox"> Apple TV path</label>
+        <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>
+        <label class="check"><input id="jellyfin-filter" type="checkbox"> Jellyfin-compatible API</label>
+        <button id="reset" type="button">Reset</button>
+        <span id="result-count">{len(projects)} shown</span>
+      </div>
+    </section>
+
+    <section class="cards" aria-label="Project comparison cards">
 {cards}
     </section>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th><th>Architecture</th><th>AIOStreams</th><th>Debrid</th><th>Usenet</th><th>Apple TV</th><th>Jellyfin API</th><th>Backend model</th><th>GitHub</th><th>Verified</th>
+          </tr>
+        </thead>
+        <tbody>
+{rows}
+        </tbody>
+      </table>
+    </div>
+
+    <footer>
+      Curated facts come from first-party evidence wherever possible. Volatile GitHub metadata is fetched only during the Pages build and is not stored as project truth.
+    </footer>
   </main>
+  <script>
+    (() => {{
+      const search = document.querySelector('#search');
+      const aio = document.querySelector('#aio-filter');
+      const dependency = document.querySelector('#dependency-filter');
+      const apple = document.querySelector('#apple-filter');
+      const usenet = document.querySelector('#usenet-filter');
+      const jellyfin = document.querySelector('#jellyfin-filter');
+      const reset = document.querySelector('#reset');
+      const count = document.querySelector('#result-count');
+      const items = [...document.querySelectorAll('.filterable')];
+      const compatibleAio = new Set(['explicit', 'stremio_protocol', 'plugin_or_bridge']);
+      const applePaths = new Set(['released_first_party', 'source_only_first_party', 'compatible_third_party']);
+      const externalDeps = new Set({json.dumps(sorted(EXTERNAL_DEPENDENCIES))});
+
+      function matches(item) {{
+        const query = search.value.trim().toLowerCase();
+        if (query && !item.dataset.search.includes(query)) return false;
+        if (aio.value === 'compatible' && !compatibleAio.has(item.dataset.aio)) return false;
+        if (aio.value === 'unconfirmed' && item.dataset.aio !== 'unconfirmed') return false;
+        if (aio.value === 'no-first-party' && !['none', 'scope_conflict'].includes(item.dataset.aio)) return false;
+        if (dependency.value === 'independent' && item.dataset.dependency !== 'independent') return false;
+        if (dependency.value === 'external' && !externalDeps.has(item.dataset.dependency)) return false;
+        if (apple.checked && !applePaths.has(item.dataset.apple)) return false;
+        if (usenet.checked && item.dataset.usenet !== 'yes') return false;
+        if (jellyfin.checked && item.dataset.jellyfin !== 'yes') return false;
+        return true;
+      }}
+
+      function apply() {{
+        items.forEach(item => item.classList.toggle('hidden', !matches(item)));
+        const visibleCards = [...document.querySelectorAll('.project-card.filterable')].filter(item => !item.classList.contains('hidden')).length;
+        count.textContent = `${{visibleCards}} shown`;
+      }}
+
+      [search, aio, dependency, apple, usenet, jellyfin].forEach(control => control.addEventListener('input', apply));
+      reset.addEventListener('click', () => {{
+        search.value = '';
+        aio.value = 'all';
+        dependency.value = 'all';
+        apple.checked = false;
+        usenet.checked = false;
+        jellyfin.checked = false;
+        apply();
+      }});
+      apply();
+    }})();
+  </script>
 </body>
 </html>
 """
