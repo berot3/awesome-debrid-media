@@ -486,6 +486,221 @@
         }
       ],
       "verified_at": "2026-08-28"
+    },
+    {
+      "id": "jellyio-streams",
+      "name": "Jellyio Streams",
+      "repository": "wrvines/jellyio-streams",
+      "description": "Jellyfin plugin that searches a configured AIOStreams instance, adds on-demand items to a Jellyfin library, and re-resolves fresh streams at playback time.",
+      "architecture": "media_server_plugin",
+      "dependency": "plugin_for_jellyfin",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "The plugin is purpose-built for AIOStreams and requires a configured AIOStreams install URL.",
+        "evidence": [
+          {
+            "claim": "The README describes Jellyio Streams as a Jellyfin plugin for streaming from a self-hosted AIOStreams instance and documents AIOStreams-specific setup.",
+            "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "yes",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "compatible_third_party",
+          "note": "Playback occurs through normal Jellyfin clients; the README says playback works on every Jellyfin client, and Infuse provides an Apple TV Jellyfin client path.",
+          "evidence": [
+            {
+              "claim": "The Jellyio Streams README says added items behave like normal Jellyfin library items and playback works on every Jellyfin client.",
+              "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            },
+            {
+              "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
+              "url": "https://firecore.com/infuse",
+              "source_type": "official_docs",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "android_tv": {
+          "state": "compatible_third_party",
+          "note": "Playback uses ordinary Jellyfin clients; Android TV client availability depends on the chosen Jellyfin client.",
+          "evidence": [
+            {
+              "claim": "The README says playback works on every Jellyfin client.",
+              "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "web": {
+          "state": "compatible_third_party",
+          "note": "Search/add is integrated into the Jellyfin dashboard; playback remains a Jellyfin client function.",
+          "evidence": [
+            {
+              "claim": "The README documents a Jellyfin dashboard search page and normal Jellyfin library playback.",
+              "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README documents signed .strm tokens that trigger fresh AIOStreams resolution and redirect/proxy behavior at playback.",
+          "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "gelato",
+      "name": "Gelato",
+      "repository": "lostb1t/Gelato",
+      "description": "Jellyfin integration plugin that replaces/extends Jellyfin discovery with Stremio-powered results and resolves remote streams on demand.",
+      "architecture": "media_server_plugin",
+      "dependency": "plugin_for_jellyfin",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "Gelato's README explicitly requires an AIOStreams manifest and states that only AIOStreams is supported.",
+        "evidence": [
+          {
+            "claim": "The official README instructs users to set up an AIOStreams manifest and explicitly states that only AIOStreams is supported.",
+            "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "unknown",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "compatible_third_party",
+          "note": "Gelato injects items into Jellyfin and uses Jellyfin client playback; Infuse provides an Apple TV Jellyfin client path.",
+          "evidence": [
+            {
+              "claim": "The Gelato README says Stremio items behave like native Jellyfin items and streams play through Jellyfin.",
+              "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            },
+            {
+              "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
+              "url": "https://firecore.com/infuse",
+              "source_type": "official_docs",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to Jellyfin clients; Android TV coverage was not separately verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "compatible_third_party",
+          "note": "Gelato integrates discovery and playback into Jellyfin rather than shipping a separate web client.",
+          "evidence": [
+            {
+              "claim": "The README describes Gelato as a Jellyfin plugin that replaces Jellyfin search and integrates Stremio items into Jellyfin's database.",
+              "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-08-28"
+            }
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes realtime stream resolution, Jellyfin database integration, and proxying through Jellyfin.",
+          "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
+    },
+    {
+      "id": "cineflow",
+      "name": "CineFlow",
+      "repository": "S0lidByte/CineFlow",
+      "description": "Riven-derived self-hosted media automation platform that bridges Debrid providers and scrapers to Plex, Jellyfin, or Emby through a streaming-oriented VFS.",
+      "architecture": "media_automation_vfs",
+      "dependency": "requires_media_server",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "The current source tree contains a dedicated AIOStreams scraper and AIOStreams configuration model, even though the README's scraper summary does not currently list it.",
+        "evidence": [
+          {
+            "claim": "The current source implements an AIOStreams scraper that authenticates to an AIOStreams instance and queries its search API.",
+            "url": "https://github.com/S0lidByte/CineFlow/blob/main/src/program/services/scrapers/aiostreams.py",
+            "source_type": "source_code",
+            "checked_at": "2026-08-28"
+          }
+        ]
+      },
+      "stremio_protocol": "unknown",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": ["Real-Debrid", "AllDebrid"],
+        "usenet": "unknown",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "CineFlow serves content through an external media server; Apple TV support depends on the selected Plex/Jellyfin/Emby client stack.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "CineFlow serves content through an external media server; Android TV support depends on the selected Plex/Jellyfin/Emby client stack.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "The platform has separate frontend work, while playback is delegated to the external media server; browser playback was not verified for this record.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes CineFlow as a self-hosted media automation platform using Debrid providers, scrapers, a VFS, and Plex/Jellyfin/Emby media servers.",
+          "url": "https://github.com/S0lidByte/CineFlow/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-28"
+        }
+      ],
+      "verified_at": "2026-08-28"
     }
   ]
 }
