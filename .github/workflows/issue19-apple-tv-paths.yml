@@ -1,0 +1,112 @@
+name: Issue 19 Apple TV paths
+
+on:
+  push:
+    branches:
+      - work/issue-19-apple-tv-paths
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: work/issue-19-apple-tv-paths
+
+      - name: Apply Issue 19 patch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/build.py')
+          text = path.read_text(encoding='utf-8')
+
+          replacements = [
+              (
+                  '''CLIENT_LABELS = {\n    "released_first_party": "✅ First-party release",\n    "source_only_first_party": "🧪 First-party source only",\n    "compatible_third_party": "🔗 Compatible third-party client",\n    "unconfirmed": "🟡 Unconfirmed",\n    "none": "⚪ None",\n}\n''',
+                  '''CLIENT_LABELS = {\n    "released_first_party": "✅ First-party release",\n    "source_only_first_party": "🧪 First-party source only",\n    "compatible_third_party": "🔗 Compatible third-party client",\n    "unconfirmed": "🟡 Unconfirmed",\n    "none": "⚪ None",\n}\nCLIENT_EXPLANATIONS = {\n    "released_first_party": "A public first-party Apple TV/tvOS release is available.",\n    "source_only_first_party": "First-party tvOS source exists, but no public/installable release is evidenced.",\n    "compatible_third_party": "Apple TV playback is available through a compatible third-party client; this is not first-party tvOS support.",\n    "unconfirmed": "Current evidence is insufficient to establish an Apple TV path. This does not mean none exists.",\n    "none": "Current evidence supports that there is no Apple TV path in scope for this project.",\n}\n'''
+              ),
+              (
+                  '''def project_details_html(project: dict) -> str:\n    return (\n        f"<p><strong>AIOStreams:</strong> {esc(project['aiostreams']['note'])}</p>"\n        f"<p><strong>Apple TV:</strong> {esc(project['clients']['apple_tv']['note'])}</p>"\n        f"{evidence_html(project)}"\n    )\n''',
+                  '''def project_details_html(project: dict) -> str:\n    apple_state = project["clients"]["apple_tv"]["state"]\n    return (\n        f"<p><strong>AIOStreams:</strong> {esc(project['aiostreams']['note'])}</p>"\n        f"<p><strong>Apple TV path:</strong> {esc(CLIENT_LABELS[apple_state])} — {esc(project['clients']['apple_tv']['note'])}</p>"\n        f"{evidence_html(project)}"\n    )\n'''
+              ),
+              (
+                  '''def aio_guide_html() -> str:\n    items = []\n    for state, label in AIO_LABELS.items():\n        items.append(\n            "<div>"\n            f"<dt>{esc(label)}</dt>"\n            f"<dd>{esc(AIO_EXPLANATIONS[state])}</dd>"\n            "</div>"\n        )\n    return "".join(items)\n''',
+                  '''def aio_guide_html() -> str:\n    items = []\n    for state, label in AIO_LABELS.items():\n        items.append(\n            "<div>"\n            f"<dt>{esc(label)}</dt>"\n            f"<dd>{esc(AIO_EXPLANATIONS[state])}</dd>"\n            "</div>"\n        )\n    return "".join(items)\n\n\ndef apple_guide_html() -> str:\n    items = []\n    for state, label in CLIENT_LABELS.items():\n        items.append(\n            "<div>"\n            f"<dt>{esc(label)}</dt>"\n            f"<dd>{esc(CLIENT_EXPLANATIONS[state])}</dd>"\n            "</div>"\n        )\n    return "".join(items)\n'''
+              ),
+              (
+                  '''          <div><span>Apple TV</span><strong>{esc(CLIENT_LABELS[apple_state])}</strong></div>''',
+                  '''          <div><span>Apple TV path</span><strong>{esc(CLIENT_LABELS[apple_state])}</strong></div>'''
+              ),
+              (
+                  '''    aio_guide = aio_guide_html()\n''',
+                  '''    aio_guide = aio_guide_html()\n    apple_guide = apple_guide_html()\n'''
+              ),
+              (
+                  '''      <p><strong>Why include projects without first-party AIOStreams support?</strong> Inclusion means the architecture is useful to compare in this ecosystem, not that the project is endorsed or AIOStreams-compatible. That is why a project such as Silo can remain visible while being classified accurately.</p>\n      <p class="small"><strong>Search vs. filters:</strong> Text search checks project name, repository, description, architecture and named Debrid providers. Use the AIOStreams control for compatibility state. The Apple TV filter groups first-party release, source-only and compatible third-party-client paths.</p>''',
+                  '''      <p><strong>Why include projects without first-party AIOStreams support?</strong> Inclusion means the architecture is useful to compare in this ecosystem, not that the project is endorsed or AIOStreams-compatible. That is why a project such as Silo can remain visible while being classified accurately.</p>\n      <p><strong>Apple TV paths are not equivalent.</strong> A public first-party tvOS release, first-party source code, and a compatible third-party client are different support paths. The comparison keeps those states separate:</p>\n      <dl class="status-key">\n{apple_guide}\n      </dl>\n      <p class="small"><strong>Search vs. filters:</strong> Text search checks project name, repository, description, architecture and named Debrid providers. Use the AIOStreams and Apple TV controls for structured compatibility/path filtering.</p>'''
+              ),
+              (
+                  '''        <label class="check"><input id="apple-filter" type="checkbox"> Apple TV: any path</label>\n        <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>''',
+                  '''        <select id="apple-filter" aria-label="Apple TV client path">\n          <option value="all">Any Apple TV state</option>\n          <option value="any-path">Apple TV: any usable path</option>\n          <option value="released_first_party">Apple TV: first-party release</option>\n          <option value="source_only_first_party">Apple TV: first-party source only</option>\n          <option value="compatible_third_party">Apple TV: compatible third-party client</option>\n          <option value="unconfirmed">Apple TV: unconfirmed</option>\n          <option value="none">Apple TV: none</option>\n        </select>\n        <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>'''
+              ),
+              (
+                  '''<caption class="sr-only">Comparison of self-hosted Debrid and Usenet media projects by architecture, AIOStreams integration, capabilities, Apple TV path, backend model, GitHub activity and verification date.</caption>''',
+                  '''<caption class="sr-only">Comparison of self-hosted Debrid and Usenet media projects by architecture, AIOStreams integration, capabilities, Apple TV client path, backend model, GitHub activity and verification date.</caption>'''
+              ),
+              (
+                  '''            <th>Project</th><th>Architecture</th><th>AIOStreams</th><th>Debrid</th><th>Usenet</th><th>Apple TV</th><th>Jellyfin API</th><th>Backend model</th><th>GitHub</th><th>Verified</th>''',
+                  '''            <th>Project</th><th>Architecture</th><th>AIOStreams</th><th>Debrid</th><th>Usenet</th><th>Apple TV path</th><th>Jellyfin API</th><th>Backend model</th><th>GitHub</th><th>Verified</th>'''
+              ),
+              (
+                  '''      const applePaths = new Set(['released_first_party', 'source_only_first_party', 'compatible_third_party']);''',
+                  '''      const usableApplePaths = new Set(['released_first_party', 'source_only_first_party', 'compatible_third_party']);'''
+              ),
+              (
+                  '''        if (apple.checked && !applePaths.has(item.dataset.apple)) return false;''',
+                  '''        if (apple.value === 'any-path' && !usableApplePaths.has(item.dataset.apple)) return false;\n        if (!['all', 'any-path'].includes(apple.value) && item.dataset.apple !== apple.value) return false;'''
+              ),
+              (
+                  '''        apple.checked = false;''',
+                  '''        apple.value = 'all';'''
+              ),
+          ]
+
+          original = text
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit(f'expected snippet not found:\n{old[:180]}')
+              text = text.replace(old, new, 1)
+
+          if text == original:
+              raise SystemExit('patch made no changes')
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate
+        run: |
+          python3 scripts/validate.py
+          python3 scripts/build.py
+          test -s dist/index.html
+          grep -q 'Apple TV: first-party release' dist/index.html
+          grep -q 'Apple TV: compatible third-party client' dist/index.html
+          grep -q 'Apple TV: unconfirmed' dist/index.html
+          grep -q 'Apple TV: none' dist/index.html
+          grep -q 'Apple TV path:' dist/index.html
+
+      - name: Commit implementation
+        run: |
+          if git diff --quiet -- scripts/build.py; then
+            echo "No implementation change to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/build.py
+          git commit -m "Expose distinct Apple TV client paths"
+          git push origin HEAD:work/issue-19-apple-tv-paths
