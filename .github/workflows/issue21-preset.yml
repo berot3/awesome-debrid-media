@@ -1,0 +1,44 @@
+name: Issue 21 use-case preset
+
+on:
+  push:
+    branches:
+      - work/issue-21-use-case-preset
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: work/issue-21-use-case-preset
+
+      - name: Apply Issue 21 patch
+        run: python3 scripts/issue21_preset_patch.py
+
+      - name: Validate
+        run: |
+          python3 scripts/validate.py
+          python3 scripts/build.py
+          test -s dist/index.html
+          grep -q 'id="preset-menu"' dist/index.html
+          grep -q 'id="preset-aio-apple"' dist/index.html
+          grep -q 'AIOStreams-compatible + Apple TV path' dist/index.html
+          grep -q "aio.value = 'compatible'" dist/index.html
+          grep -q "apple.value = 'any-path'" dist/index.html
+
+      - name: Commit implementation
+        run: |
+          if git diff --quiet -- scripts/build.py; then
+            echo "No implementation changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/build.py
+          git commit -m "Add AIOStreams and Apple TV quick filter"
+          git push origin HEAD:work/issue-21-use-case-preset
