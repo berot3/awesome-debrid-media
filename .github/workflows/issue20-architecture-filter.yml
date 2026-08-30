@@ -33,7 +33,7 @@ jobs:
           grep -q 'Bridge' dist/index.html
           grep -q 'Automation / VFS' dist/index.html
           grep -q 'Media-server plugin' dist/index.html
-          grep -q '>Other<' dist/index.html
+          grep -q 'data-label="Other"' dist/index.html
 
       - name: Commit implementation
         run: |
