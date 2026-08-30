@@ -26,12 +26,12 @@ for old, new in replacements:
     elif new not in text:
         raise SystemExit(f"expected Issue 29 target not found: {old}")
 
-media = """    @media (max-width: 919px) {{{{
-      .filter-menu[open] {{{{ flex: 1 0 100%; }}}}
-      .filter-menu fieldset {{{{ position: static; box-sizing: border-box; width: 100%; min-width: 0; margin-top: .35rem; }}}}
-    }}}}
+media = """    @media (max-width: 919px) {{
+      .filter-menu[open] {{ flex: 1 0 100%; }}
+      .filter-menu fieldset {{ position: static; box-sizing: border-box; width: 100%; min-width: 0; margin-top: .35rem; }}
+    }}
 """
-marker = "    @media (min-width: 920px) {{{{"
+marker = "    @media (min-width: 920px) {{"
 if media not in text:
     if marker not in text:
         raise SystemExit("expected 920px media marker not found")
