@@ -383,7 +383,7 @@ def main() -> int:
       .table-wrap {{ display: block; }}
       .desktop-project-details {{ display: grid; gap: .8rem; margin-top: 1.4rem; }}
       .desktop-project-details > h2 {{ margin: 0; font-size: 1.35rem; }}
-      .filters {{ grid-template-columns: 1fr auto; align-items: center; }}
+      .filters {{ grid-template-columns: 1fr; align-items: stretch; }}
       .filter-row:first-child {{ min-width: 0; }}
     }}
     @media (min-width: 1200px) {{
