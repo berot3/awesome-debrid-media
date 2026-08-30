@@ -4,8 +4,6 @@ A curated, evidence-based comparison of self-hosted media servers, streaming bac
 
 **Comparison site:** https://berot3.github.io/awesome-debrid-media/
 
-> The Pages workflow is part of the initial release. Until that release is merged and GitHub Pages is enabled for the repository, the URL above may not be live yet.
-
 ## Why this exists
 
 Broad Debrid lists are useful, but they usually do not compare the architecture and client experience of the newer server-side media projects in enough detail. This project focuses on questions such as:
