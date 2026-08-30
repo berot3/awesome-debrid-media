@@ -1,0 +1,33 @@
+name: Issue 4 data audit patch
+
+on:
+  push:
+    branches:
+      - work/issue-4-data-audit
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: work/issue-4-data-audit
+
+      - name: Apply audited data updates
+        run: python3 scripts/issue4_data_audit_patch.py
+
+      - name: Commit patched project data
+        run: |
+          if git diff --quiet -- data/projects.json; then
+            echo "No data changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/projects.json
+          git commit -m "Audit seeded project data"
+          git push origin HEAD:work/issue-4-data-audit
