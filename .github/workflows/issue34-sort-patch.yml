@@ -25,7 +25,7 @@ jobs:
           test -s dist/index.html
           grep -q 'id="sort-filter"' dist/index.html
           grep -q 'Sort: curated order' dist/index.html
-          grep -q 'params.set('\''sort'\''' dist/index.html
+          grep -q "params.set('sort'" dist/index.html
           grep -q 'applySort();' dist/index.html
           grep -q 'data-architecture-label=' dist/index.html
           grep -q 'data-verified=' dist/index.html
