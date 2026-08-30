@@ -319,7 +319,7 @@ def main() -> int:
     .status-key div {{ padding: .65rem .7rem; border-radius: .7rem; background: var(--soft); }}
     .status-key dt {{ font-weight: 700; }}
     .status-key dd {{ margin: .18rem 0 0; color: var(--muted); font-size: .86rem; }}
-    .filters {{ position: sticky; top: 0; z-index: 5; display: grid; gap: .8rem; margin: 1rem 0 1.4rem; padding: .9rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in srgb, Canvas 94%, transparent); backdrop-filter: blur(16px); }}
+    .filters {{ position: sticky; top: 0; z-index: 5; display: grid; grid-template-columns: minmax(0, 1fr); gap: .8rem; margin: 1rem 0 1.4rem; padding: .9rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in srgb, Canvas 94%, transparent); backdrop-filter: blur(16px); }}
     .filter-row {{ display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }}
     input[type="search"], select, button {{ font: inherit; color: inherit; background: Canvas; border: 1px solid var(--border); border-radius: .7rem; padding: .62rem .75rem; }}
     input[type="search"] {{ flex: 1 1 260px; min-width: 0; }}
@@ -378,6 +378,10 @@ def main() -> int:
     .detail-back-link {{ display: inline-block; margin-top: .2rem; font-size: .86rem; font-weight: 650; }}
     .hidden {{ display: none !important; }}
     footer {{ margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .9rem; }}
+    @media (max-width: 919px) {{
+      .filter-menu[open] {{ flex: 1 0 100%; }}
+      .filter-menu fieldset {{ position: static; box-sizing: border-box; width: 100%; min-width: 0; margin-top: .35rem; }}
+    }}
     @media (min-width: 920px) {{
       .cards {{ display: none; }}
       .table-wrap {{ display: block; }}
@@ -431,7 +435,7 @@ def main() -> int:
     <section class="filters" aria-label="Comparison filters">
       <div class="filter-row">
         <input id="search" type="search" placeholder="Search name, repo, description, provider…" aria-label="Search project name, repository, description, architecture or Debrid provider">
-        <details id="preset-menu" class="filter-menu">
+        <details id="preset-menu" class="filter-menu" name="comparison-filter-menu">
           <summary>Quick filter</summary>
           <fieldset class="preset-option">
             <legend class="sr-only">Use-case presets</legend>
@@ -445,7 +449,7 @@ def main() -> int:
           <option value="unconfirmed">AIOStreams unconfirmed</option>
           <option value="no-first-party">No first-party / scope conflict</option>
         </select>
-        <details id="architecture-filter" class="filter-menu">
+        <details id="architecture-filter" class="filter-menu" name="comparison-filter-menu">
           <summary><span id="architecture-summary">Architecture: all</span></summary>
           <fieldset>
             <legend class="sr-only">Architecture types</legend>
