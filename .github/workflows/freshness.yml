@@ -1,0 +1,32 @@
+name: Evidence freshness
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Generate advisory freshness report
+        run: |
+          python3 scripts/freshness.py | tee freshness-report.txt
+          {
+            echo '## Evidence freshness report'
+            echo
+            echo '```text'
+            cat freshness-report.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
