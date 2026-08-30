@@ -195,6 +195,9 @@ def data_attrs(project: dict) -> str:
             f'data-usenet="{esc(project["sources"]["usenet"])}"',
             f'data-jellyfin="{esc(project["api"]["jellyfin_compatible"])}"',
             f'data-dependency="{esc(project["dependency"])}"',
+            f'data-project-name="{esc(project["name"])}"',
+            f'data-architecture-label="{esc(ARCHITECTURE_LABELS[project["architecture"]])}"',
+            f'data-verified="{esc(project["verified_at"])}"',
         ]
     )
 
@@ -268,7 +271,7 @@ def project_row(project: dict, metadata: dict) -> str:
 
 def project_detail(project: dict) -> str:
     return f"""
-      <article id="evidence-{esc(project['id'])}" class="desktop-project-detail filterable" aria-labelledby="evidence-{esc(project['id'])}-heading" {data_attrs(project)}>
+      <article id="evidence-{esc(project['id'])}" class="desktop-project-detail filterable" data-project-id="{esc(project['id'])}" aria-labelledby="evidence-{esc(project['id'])}-heading" {data_attrs(project)}>
         <h3 id="evidence-{esc(project['id'])}-heading">{esc(project['name'])}</h3>
         {project_details_html(project)}
         <a class="detail-back-link" href="#project-{esc(project['id'])}">Back to {esc(project['name'])} comparison row</a>
@@ -490,6 +493,14 @@ def main() -> int:
         </select>
         <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>
         <label class="check"><input id="jellyfin-filter" type="checkbox"> Jellyfin-compatible API</label>
+        <select id="sort-filter" aria-label="Sort projects">
+          <option value="default">Sort: curated order</option>
+          <option value="name-asc">Sort: name A–Z</option>
+          <option value="name-desc">Sort: name Z–A</option>
+          <option value="architecture">Sort: architecture</option>
+          <option value="verified-newest">Sort: verified newest</option>
+          <option value="verified-oldest">Sort: verified oldest</option>
+        </select>
         <button id="reset" type="button">Reset</button>
         <button id="copy-share-link" type="button" aria-live="polite">Copy share link</button>
         <span id="result-count" role="status" aria-live="polite" aria-atomic="true">{len(projects)} projects shown</span>
@@ -557,6 +568,7 @@ def main() -> int:
       const apple = document.querySelector('#apple-filter');
       const usenet = document.querySelector('#usenet-filter');
       const jellyfin = document.querySelector('#jellyfin-filter');
+      const sort = document.querySelector('#sort-filter');
       const reset = document.querySelector('#reset');
       const emptyReset = document.querySelector('#empty-reset');
       const copyShareLink = document.querySelector('#copy-share-link');
@@ -578,12 +590,17 @@ def main() -> int:
       const desktopSticky = window.matchMedia('(min-width: 1200px)');
       const shortlistLimit = 4;
       const selectedProjects = new Set();
-      const cardSources = new Map([...document.querySelectorAll('.project-card[data-project-id]')].map(card => [card.dataset.projectId, card]));
+      const cardItems = [...document.querySelectorAll('.cards > .project-card[data-project-id]')];
+      const rowItems = [...document.querySelectorAll('.table-wrap tbody > tr[data-project-id]')];
+      const detailItems = [...document.querySelectorAll('.desktop-project-details > .desktop-project-detail[data-project-id]')];
+      const cardSources = new Map(cardItems.map(card => [card.dataset.projectId, card]));
+      const originalOrder = new Map(cardItems.map((card, index) => [card.dataset.projectId, index]));
+      const sortCollator = new Intl.Collator(undefined, {{ sensitivity: 'base', numeric: true }});
       let shortlistFocused = false;
 
-      function setSelectFromParam(control, value) {{
+      function setSelectFromParam(control, value, fallback = 'all') {{
         const valid = [...control.options].some(option => option.value === value);
-        control.value = valid ? value : 'all';
+        control.value = valid ? value : fallback;
       }}
 
       function restoreFromUrl() {{
@@ -592,6 +609,7 @@ def main() -> int:
         setSelectFromParam(aio, params.get('aio'));
         setSelectFromParam(dependency, params.get('dep'));
         setSelectFromParam(apple, params.get('apple'));
+        setSelectFromParam(sort, params.get('sort'), 'default');
         const selectedArchitectures = new Set(params.getAll('arch'));
         architecture.forEach(control => control.checked = selectedArchitectures.has(control.value));
         usenet.checked = params.get('usenet') === '1';
@@ -608,6 +626,7 @@ def main() -> int:
         if (apple.value !== 'all') params.set('apple', apple.value);
         if (usenet.checked) params.set('usenet', '1');
         if (jellyfin.checked) params.set('jellyfin', '1');
+        if (sort.value !== 'default') params.set('sort', sort.value);
         const queryString = params.toString();
         return window.location.pathname + (queryString ? '?' + queryString : '') + window.location.hash;
       }}
@@ -644,6 +663,29 @@ def main() -> int:
         window.setTimeout(() => copyShareLink.textContent = original, 1600);
       }}
 
+      function compareProjectElements(a, b) {{
+        if (!a || !b) return 0;
+        const originalCompare = (originalOrder.get(a.dataset.projectId) ?? Number.MAX_SAFE_INTEGER) - (originalOrder.get(b.dataset.projectId) ?? Number.MAX_SAFE_INTEGER);
+        const nameCompare = sortCollator.compare(a.dataset.projectName || '', b.dataset.projectName || '');
+        let primary = 0;
+        if (sort.value === 'name-asc') primary = nameCompare;
+        else if (sort.value === 'name-desc') primary = -nameCompare;
+        else if (sort.value === 'architecture') primary = sortCollator.compare(a.dataset.architectureLabel || '', b.dataset.architectureLabel || '');
+        else if (sort.value === 'verified-newest') primary = (b.dataset.verified || '').localeCompare(a.dataset.verified || '');
+        else if (sort.value === 'verified-oldest') primary = (a.dataset.verified || '').localeCompare(b.dataset.verified || '');
+        else return originalCompare;
+        return primary || nameCompare || originalCompare;
+      }}
+
+      function applySort() {{
+        [cardItems, rowItems, detailItems].forEach(group => {{
+          if (!group.length) return;
+          const parent = group[0].parentElement;
+          [...group].sort(compareProjectElements).forEach(item => parent.appendChild(item));
+        }});
+        if (shortlistFocused) renderShortlist();
+      }}
+
       function syncSelectionButtons() {{
         const atLimit = selectedProjects.size >= shortlistLimit;
         document.querySelectorAll('[data-select-project]').forEach(button => {{
@@ -658,7 +700,7 @@ def main() -> int:
 
       function renderShortlist() {{
         shortlistGrid.replaceChildren();
-        selectedProjects.forEach(projectId => {{
+        [...selectedProjects].sort((a, b) => compareProjectElements(cardSources.get(a), cardSources.get(b))).forEach(projectId => {{
           const source = cardSources.get(projectId);
           if (!source) return;
           const clone = source.cloneNode(true);
@@ -762,6 +804,7 @@ def main() -> int:
       function apply(syncState = true) {{
         syncArchitectureSummary();
         items.forEach(item => item.classList.toggle('hidden', !matches(item)));
+        applySort();
         const visibleCards = [...document.querySelectorAll('.project-card.filterable')].filter(item => !item.classList.contains('hidden')).length;
         count.textContent = `${{visibleCards}} project${{visibleCards === 1 ? '' : 's'}} shown`;
         emptyState.classList.toggle('hidden', visibleCards !== 0);
@@ -776,10 +819,11 @@ def main() -> int:
         apple.value = 'all';
         usenet.checked = false;
         jellyfin.checked = false;
+        sort.value = 'default';
         apply();
       }}
 
-      [search, aio, dependency, apple, usenet, jellyfin, ...architecture].forEach(control => control.addEventListener('input', apply));
+      [search, aio, dependency, apple, usenet, jellyfin, sort, ...architecture].forEach(control => control.addEventListener('input', apply));
       presetAioApple.addEventListener('click', applyAioApplePreset);
       reset.addEventListener('click', resetFilters);
       emptyReset.addEventListener('click', resetFilters);
