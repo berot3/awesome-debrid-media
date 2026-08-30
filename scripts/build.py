@@ -46,6 +46,13 @@ CLIENT_LABELS = {
     "unconfirmed": "🟡 Unconfirmed",
     "none": "⚪ None",
 }
+CLIENT_EXPLANATIONS = {
+    "released_first_party": "A public first-party Apple TV/tvOS release is available.",
+    "source_only_first_party": "First-party tvOS source exists, but no public/installable release is evidenced.",
+    "compatible_third_party": "Apple TV playback is available through a compatible third-party client; this is not first-party tvOS support.",
+    "unconfirmed": "Current evidence is insufficient to establish an Apple TV path. This does not mean none exists.",
+    "none": "Current evidence supports that there is no Apple TV path in scope for this project.",
+}
 CAPABILITY_LABELS = {"yes": "✅ Yes", "no": "⚪ No", "unknown": "🟡 Unknown"}
 EXTERNAL_DEPENDENCIES = {
     "requires_jellyfin",
@@ -111,9 +118,10 @@ def evidence_html(project: dict) -> str:
 
 
 def project_details_html(project: dict) -> str:
+    apple_state = project["clients"]["apple_tv"]["state"]
     return (
         f"<p><strong>AIOStreams:</strong> {esc(project['aiostreams']['note'])}</p>"
-        f"<p><strong>Apple TV:</strong> {esc(project['clients']['apple_tv']['note'])}</p>"
+        f"<p><strong>Apple TV path:</strong> {esc(CLIENT_LABELS[apple_state])} — {esc(project['clients']['apple_tv']['note'])}</p>"
         f"{evidence_html(project)}"
     )
 
@@ -125,6 +133,18 @@ def aio_guide_html() -> str:
             "<div>"
             f"<dt>{esc(label)}</dt>"
             f"<dd>{esc(AIO_EXPLANATIONS[state])}</dd>"
+            "</div>"
+        )
+    return "".join(items)
+
+
+def apple_guide_html() -> str:
+    items = []
+    for state, label in CLIENT_LABELS.items():
+        items.append(
+            "<div>"
+            f"<dt>{esc(label)}</dt>"
+            f"<dd>{esc(CLIENT_EXPLANATIONS[state])}</dd>"
             "</div>"
         )
     return "".join(items)
@@ -189,7 +209,7 @@ def project_card(project: dict, metadata: dict) -> str:
           <div><span>AIOStreams</span><strong>{esc(AIO_LABELS[aio_state])}</strong></div>
           <div><span>Debrid</span><strong>{esc(CAPABILITY_LABELS[project['sources']['debrid']])}</strong></div>
           <div><span>Usenet</span><strong>{esc(CAPABILITY_LABELS[project['sources']['usenet']])}</strong></div>
-          <div><span>Apple TV</span><strong>{esc(CLIENT_LABELS[apple_state])}</strong></div>
+          <div><span>Apple TV path</span><strong>{esc(CLIENT_LABELS[apple_state])}</strong></div>
           <div><span>Jellyfin API</span><strong>{esc(CAPABILITY_LABELS[project['api']['jellyfin_compatible']])}</strong></div>
         </div>
         <p class="small"><strong>Debrid providers:</strong> {esc(providers)}</p>
@@ -250,6 +270,7 @@ def main() -> int:
     rows = "\n".join(project_row(project, metadata[project["id"]]) for project in projects)
     desktop_details = "\n".join(project_detail(project) for project in projects)
     aio_guide = aio_guide_html()
+    apple_guide = apple_guide_html()
 
     document = f"""<!doctype html>
 <html lang="en">
@@ -377,7 +398,11 @@ def main() -> int:
 {aio_guide}
       </dl>
       <p><strong>Why include projects without first-party AIOStreams support?</strong> Inclusion means the architecture is useful to compare in this ecosystem, not that the project is endorsed or AIOStreams-compatible. That is why a project such as Silo can remain visible while being classified accurately.</p>
-      <p class="small"><strong>Search vs. filters:</strong> Text search checks project name, repository, description, architecture and named Debrid providers. Use the AIOStreams control for compatibility state. The Apple TV filter groups first-party release, source-only and compatible third-party-client paths.</p>
+      <p><strong>Apple TV paths are not equivalent.</strong> A public first-party tvOS release, first-party source code, and a compatible third-party client are different support paths. The comparison keeps those states separate:</p>
+      <dl class="status-key">
+{apple_guide}
+      </dl>
+      <p class="small"><strong>Search vs. filters:</strong> Text search checks project name, repository, description, architecture and named Debrid providers. Use the AIOStreams and Apple TV controls for structured compatibility/path filtering.</p>
     </details>
 
     <section class="filters" aria-label="Comparison filters">
@@ -396,7 +421,15 @@ def main() -> int:
         </select>
       </div>
       <div class="filter-row">
-        <label class="check"><input id="apple-filter" type="checkbox"> Apple TV: any path</label>
+        <select id="apple-filter" aria-label="Apple TV client path">
+          <option value="all">Any Apple TV state</option>
+          <option value="any-path">Apple TV: any usable path</option>
+          <option value="released_first_party">Apple TV: first-party release</option>
+          <option value="source_only_first_party">Apple TV: first-party source only</option>
+          <option value="compatible_third_party">Apple TV: compatible third-party client</option>
+          <option value="unconfirmed">Apple TV: unconfirmed</option>
+          <option value="none">Apple TV: none</option>
+        </select>
         <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>
         <label class="check"><input id="jellyfin-filter" type="checkbox"> Jellyfin-compatible API</label>
         <button id="reset" type="button">Reset</button>
@@ -415,10 +448,10 @@ def main() -> int:
 
     <div class="table-wrap">
       <table>
-        <caption class="sr-only">Comparison of self-hosted Debrid and Usenet media projects by architecture, AIOStreams integration, capabilities, Apple TV path, backend model, GitHub activity and verification date.</caption>
+        <caption class="sr-only">Comparison of self-hosted Debrid and Usenet media projects by architecture, AIOStreams integration, capabilities, Apple TV client path, backend model, GitHub activity and verification date.</caption>
         <thead>
           <tr>
-            <th>Project</th><th>Architecture</th><th>AIOStreams</th><th>Debrid</th><th>Usenet</th><th>Apple TV</th><th>Jellyfin API</th><th>Backend model</th><th>GitHub</th><th>Verified</th>
+            <th>Project</th><th>Architecture</th><th>AIOStreams</th><th>Debrid</th><th>Usenet</th><th>Apple TV path</th><th>Jellyfin API</th><th>Backend model</th><th>GitHub</th><th>Verified</th>
           </tr>
         </thead>
         <tbody>
@@ -451,7 +484,7 @@ def main() -> int:
       const filters = document.querySelector('.filters');
       const items = [...document.querySelectorAll('.filterable')];
       const compatibleAio = new Set(['explicit', 'stremio_protocol', 'plugin_or_bridge']);
-      const applePaths = new Set(['released_first_party', 'source_only_first_party', 'compatible_third_party']);
+      const usableApplePaths = new Set(['released_first_party', 'source_only_first_party', 'compatible_third_party']);
       const externalDeps = new Set({json.dumps(sorted(EXTERNAL_DEPENDENCIES))});
       const desktopSticky = window.matchMedia('(min-width: 1200px)');
 
@@ -463,7 +496,8 @@ def main() -> int:
         if (aio.value === 'no-first-party' && !['none', 'scope_conflict'].includes(item.dataset.aio)) return false;
         if (dependency.value === 'independent' && item.dataset.dependency !== 'independent') return false;
         if (dependency.value === 'external' && !externalDeps.has(item.dataset.dependency)) return false;
-        if (apple.checked && !applePaths.has(item.dataset.apple)) return false;
+        if (apple.value === 'any-path' && !usableApplePaths.has(item.dataset.apple)) return false;
+        if (!['all', 'any-path'].includes(apple.value) && item.dataset.apple !== apple.value) return false;
         if (usenet.checked && item.dataset.usenet !== 'yes') return false;
         if (jellyfin.checked && item.dataset.jellyfin !== 'yes') return false;
         return true;
@@ -485,7 +519,7 @@ def main() -> int:
         search.value = '';
         aio.value = 'all';
         dependency.value = 'all';
-        apple.checked = false;
+        apple.value = 'all';
         usenet.checked = false;
         jellyfin.checked = false;
         apply();
