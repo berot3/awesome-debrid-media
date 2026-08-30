@@ -46,3 +46,14 @@ python3 scripts/build.py
 Projects may be listed because they are architecturally relevant even when they do not support AIOStreams. A project with `none` or `scope_conflict` status is still useful comparison data.
 
 GitHub stars and activity are informational metadata, not a ranking or recommendation score.
+
+## Licensing of contributions
+
+The repository uses split permissive licensing by material type. See [`LICENSE`](LICENSE) for the exact scope.
+
+- Contributions to implementation/source code are provided under the **MIT License**.
+- Contributions to the curated dataset and repository-authored documentation/content are provided under **CC0 1.0 Universal**.
+
+By submitting a contribution, you agree that your contribution may be distributed under the license that applies to the material you are contributing. No separate contributor license agreement or sign-off process is required.
+
+Only submit material that you have the right to contribute under the applicable license. Referencing third-party project names, evidence links, or factual claims does not relicense third-party trademarks, text, images, screenshots, or other protected material.
