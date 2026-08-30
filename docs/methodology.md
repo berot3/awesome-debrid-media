@@ -58,11 +58,17 @@ Where possible, evidence should identify the distribution path, such as App Stor
 
 ## Freshness
 
-Each project has a `verified_at` date representing the latest meaningful manual verification of the curated record.
+Each project has a `verified_at` date representing the latest meaningful manual verification of the curated record. Each evidence entry has a `checked_at` date representing when that specific source/claim was actually revisited.
 
-Do not update this date merely because a file was reformatted or GitHub metadata changed.
+Do not update either date merely because a file was reformatted, GitHub metadata changed, or a different source was reviewed. Do not mechanically set `verified_at` to the newest evidence date.
 
-When a project is active and a compatibility claim is likely to change, re-check the first-party evidence before relying on an old classification.
+The default re-audit reminder threshold is **120 days**. A project record or evidence entry at least 120 days old is considered **due for recheck**.
+
+Freshness is advisory only. Age does not prove that a claim is incorrect, unsupported, `none`, `no`, or `unconfirmed`, and stale items do not fail normal validation or the site build.
+
+v0.3 intentionally uses one threshold for all curated claims. Different freshness windows for volatile release/client paths versus slower-moving architectural facts may be considered later if maintenance experience justifies the additional policy complexity.
+
+Use `python3 scripts/freshness.py` for the maintainer-facing report. See `docs/freshness.md` for the deterministic `--as-of` workflow, JSON output, and the complete re-audit procedure.
 
 ## Dynamic GitHub metadata
 
