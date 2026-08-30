@@ -1,0 +1,46 @@
+name: Issue 22 freshness test
+
+on:
+  push:
+    branches:
+      - work/issue-22-evidence-freshness
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Validate and build
+        run: |
+          python3 scripts/validate.py
+          python3 scripts/build.py
+          test -s dist/index.html
+
+      - name: Test current freshness report
+        run: python3 scripts/freshness.py --as-of 2026-08-30
+
+      - name: Test deterministic stale JSON report
+        run: |
+          python3 scripts/freshness.py --as-of 2027-01-15 --format json > /tmp/freshness.json
+          python3 - <<'PY'
+          import json
+          with open('/tmp/freshness.json', encoding='utf-8') as handle:
+              report = json.load(handle)
+          assert report['advisory_only'] is True
+          assert report['as_of'] == '2027-01-15'
+          assert report['threshold_days'] == 120
+          assert report['projects_scanned'] > 0
+          assert report['due_count'] > 0
+          assert any(item['kind'] == 'project' for item in report['due'])
+          assert any(item['kind'] == 'evidence' for item in report['due'])
+          PY
