@@ -22,6 +22,14 @@ AIO_LABELS = {
     "none": "⚪ No first-party support",
     "scope_conflict": "⛔ Scope conflict",
 }
+AIO_EXPLANATIONS = {
+    "explicit": "The project directly documents or implements AIOStreams support.",
+    "stremio_protocol": "A generic Stremio-addon path is confirmed for AIOStreams; this is not a bespoke AIOStreams integration.",
+    "plugin_or_bridge": "AIOStreams works through an external or optional plugin, bridge, or companion layer.",
+    "unconfirmed": "The architecture is relevant, but current evidence is insufficient. This does not mean unsupported.",
+    "none": "Durable evidence supports that there is no first-party AIOStreams path.",
+    "scope_conflict": "The required remote-stream integration conflicts with documented product direction or permanent non-goals.",
+}
 ARCHITECTURE_LABELS = {
     "full_media_server": "Full media server",
     "streaming_backend": "Streaming backend",
@@ -110,6 +118,18 @@ def project_details_html(project: dict) -> str:
     )
 
 
+def aio_guide_html() -> str:
+    items = []
+    for state, label in AIO_LABELS.items():
+        items.append(
+            "<div>"
+            f"<dt>{esc(label)}</dt>"
+            f"<dd>{esc(AIO_EXPLANATIONS[state])}</dd>"
+            "</div>"
+        )
+    return "".join(items)
+
+
 def github_html(metadata: dict) -> tuple[str, str, str]:
     stars = metadata.get("stargazers_count")
     pushed_at = metadata.get("pushed_at")
@@ -186,6 +206,8 @@ def project_row(project: dict, metadata: dict) -> str:
     stars, pushed, archived = github_html(metadata)
     aio = AIO_LABELS[project["aiostreams"]["state"]]
     apple = CLIENT_LABELS[project["clients"]["apple_tv"]["state"]]
+    providers = ", ".join(project["sources"]["debrid_providers"])
+    provider_detail = f"<small>{esc(providers)}</small>" if providers else ""
     dependency = "Independent" if project["dependency"] == "independent" else "External server / plugin"
     archived_mark = " · archived" if archived else ""
     return f"""
@@ -197,7 +219,7 @@ def project_row(project: dict, metadata: dict) -> str:
         </th>
         <td>{esc(ARCHITECTURE_LABELS[project['architecture']])}</td>
         <td>{esc(aio)}</td>
-        <td>{esc(CAPABILITY_LABELS[project['sources']['debrid']])}</td>
+        <td>{esc(CAPABILITY_LABELS[project['sources']['debrid']])}{provider_detail}</td>
         <td>{esc(CAPABILITY_LABELS[project['sources']['usenet']])}</td>
         <td>{esc(apple)}</td>
         <td>{esc(CAPABILITY_LABELS[project['api']['jellyfin_compatible']])}</td>
@@ -227,6 +249,7 @@ def main() -> int:
     cards = "\n".join(project_card(project, metadata[project["id"]]) for project in projects)
     rows = "\n".join(project_row(project, metadata[project["id"]]) for project in projects)
     desktop_details = "\n".join(project_detail(project) for project in projects)
+    aio_guide = aio_guide_html()
 
     document = f"""<!doctype html>
 <html lang="en">
@@ -254,6 +277,13 @@ def main() -> int:
     .lede {{ margin: 0; max-width: 72ch; font-size: clamp(1.05rem, 2vw, 1.35rem); color: var(--muted); }}
     .intro-links {{ display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 1.25rem; font-size: .95rem; }}
     .notice {{ margin: 2rem 0 1.2rem; padding: 1rem 1.1rem; border: 1px solid var(--border); background: var(--soft); border-radius: 1rem; }}
+    .comparison-guide {{ margin: 0 0 1.2rem; padding: .9rem 1.1rem; border: 1px solid var(--border); border-radius: 1rem; background: Canvas; }}
+    .comparison-guide[open] > summary {{ margin-bottom: .7rem; }}
+    .comparison-guide p {{ max-width: 95ch; }}
+    .status-key {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: .65rem; margin: .8rem 0; }}
+    .status-key div {{ padding: .65rem .7rem; border-radius: .7rem; background: var(--soft); }}
+    .status-key dt {{ font-weight: 700; }}
+    .status-key dd {{ margin: .18rem 0 0; color: var(--muted); font-size: .86rem; }}
     .filters {{ position: sticky; top: 0; z-index: 5; display: grid; gap: .8rem; margin: 1rem 0 1.4rem; padding: .9rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in srgb, Canvas 94%, transparent); backdrop-filter: blur(16px); }}
     .filter-row {{ display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }}
     input[type="search"], select, button {{ font: inherit; color: inherit; background: Canvas; border: 1px solid var(--border); border-radius: .7rem; padding: .62rem .75rem; }}
@@ -278,6 +308,7 @@ def main() -> int:
     .small {{ font-size: .86rem; color: var(--muted); }}
     details {{ border-top: 1px solid var(--border); margin-top: .9rem; padding-top: .7rem; }}
     summary {{ cursor: pointer; font-weight: 650; }}
+    .comparison-guide {{ border-top: 1px solid var(--border); margin-top: 0; padding-top: .9rem; }}
     .evidence-list {{ padding-left: 1.2rem; font-size: .86rem; }}
     .evidence-list li {{ margin: .5rem 0; }}
     .evidence-type {{ color: var(--muted); font-size: .75rem; }}
@@ -331,12 +362,22 @@ def main() -> int:
       Inclusion is not endorsement. “Unconfirmed” means evidence is insufficient, not “unsupported.” GitHub stars are context, never a ranking.
     </section>
 
+    <details class="comparison-guide">
+      <summary>How to read this comparison</summary>
+      <p><strong>Why AIOStreams?</strong> AIOStreams is a primary comparison dimension because these server-side projects can use it as a stream-source integration point. The path matters: direct support, generic Stremio-protocol compatibility, and plugin/bridge integrations are useful but not equivalent.</p>
+      <dl class="status-key">
+{aio_guide}
+      </dl>
+      <p><strong>Why include projects without first-party AIOStreams support?</strong> Inclusion means the architecture is useful to compare in this ecosystem, not that the project is endorsed or AIOStreams-compatible. That is why a project such as Silo can remain visible while being classified accurately.</p>
+      <p class="small"><strong>Search vs. filters:</strong> Text search checks project name, repository, description, architecture and named Debrid providers. Use the AIOStreams control for compatibility state. The Apple TV filter groups first-party release, source-only and compatible third-party-client paths.</p>
+    </details>
+
     <section class="filters" aria-label="Comparison filters">
       <div class="filter-row">
-        <input id="search" type="search" placeholder="Search projects, architecture, providers…" aria-label="Search projects">
+        <input id="search" type="search" placeholder="Search name, repo, description, provider…" aria-label="Search project name, repository, description, architecture or Debrid provider">
         <select id="aio-filter" aria-label="AIOStreams support">
           <option value="all">All AIOStreams states</option>
-          <option value="compatible">AIOStreams compatible</option>
+          <option value="compatible">Any compatible path (explicit / protocol / bridge)</option>
           <option value="unconfirmed">AIOStreams unconfirmed</option>
           <option value="no-first-party">No first-party / scope conflict</option>
         </select>
@@ -347,7 +388,7 @@ def main() -> int:
         </select>
       </div>
       <div class="filter-row">
-        <label class="check"><input id="apple-filter" type="checkbox"> Apple TV path</label>
+        <label class="check"><input id="apple-filter" type="checkbox"> Apple TV: any path</label>
         <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>
         <label class="check"><input id="jellyfin-filter" type="checkbox"> Jellyfin-compatible API</label>
         <button id="reset" type="button">Reset</button>
