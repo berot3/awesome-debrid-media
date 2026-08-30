@@ -958,7 +958,7 @@
       "repository": "corveck79/mycelium",
       "description": "On-demand Debrid streaming backend that turns requests into Jellyfin/Emby/Kodi/Plex/Infuse-ready STRM entries and proxies TorBox or Real-Debrid streams with no full local media storage.",
       "architecture": "streaming_backend",
-      "dependency": "requires_media_server",
+      "dependency": "independent",
       "aiostreams": {
         "state": "unconfirmed",
         "note": "No current first-party AIOStreams integration was confirmed during this survey.",
@@ -1482,7 +1482,7 @@
       "id": "stremthru",
       "name": "StremThru",
       "repository": "MunifTanjim/stremthru",
-      "description": "Stremio-oriented streaming proxy/backend that abstracts multiple Debrid stores, proxies byte-range media content, and can route store traffic through HTTP(S) proxies.",
+      "description": "Stremio-oriented streaming proxy/backend that abstracts multiple Debrid stores, proxies byte-range media content, and ships built-in Stremio addons for store, torrent, and Usenet/NNTP streaming.",
       "architecture": "streaming_backend",
       "dependency": "independent",
       "aiostreams": {
@@ -1501,11 +1501,11 @@
           "Offcloud",
           "PikPak",
           "Premiumize",
-          "RealDebrid",
+          "Real-Debrid",
           "TorBox",
           "Torrin"
         ],
-        "usenet": "unknown",
+        "usenet": "yes",
         "local_media": "unknown"
       },
       "api": {
@@ -1533,6 +1533,18 @@
           "claim": "The README describes StremThru as a Stremio companion with HTTP(S) proxying, byte serving, store-content proxying, and integrations for the listed Debrid/cloud stores.",
           "url": "https://github.com/MunifTanjim/stremthru/blob/main/README.md",
           "source_type": "readme",
+          "checked_at": "2026-08-30"
+        },
+        {
+          "claim": "First-party documentation says StremThru includes six built-in Stremio addons, including Store, Torz and Newz.",
+          "url": "https://github.com/MunifTanjim/stremthru/blob/main/docs/stremio-addons/index.md",
+          "source_type": "official_docs",
+          "checked_at": "2026-08-30"
+        },
+        {
+          "claim": "The built-in StremThru Newz addon explicitly documents Usenet integration and NNTP streaming.",
+          "url": "https://github.com/MunifTanjim/stremthru/blob/main/docs/stremio-addons/newz.md",
+          "source_type": "official_docs",
           "checked_at": "2026-08-30"
         }
       ],
