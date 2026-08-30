@@ -20,6 +20,9 @@ jobs:
       - name: Apply accepted project records
         run: python3 scripts/issue3_project_coverage_patch.py
 
+      - name: Apply factual second-pass fixups
+        run: python3 scripts/issue3_project_coverage_fixups.py
+
       - name: Validate curated data
         run: python3 scripts/validate.py
 
@@ -35,5 +38,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/projects.json
-          git commit -m "Expand project coverage"
+          git commit -m "Refine project coverage evidence"
           git push origin HEAD:work/issue-3-project-coverage
