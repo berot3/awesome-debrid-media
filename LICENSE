@@ -1,0 +1,33 @@
+Awesome Debrid Media licensing
+
+This repository uses different licenses for different categories of material.
+
+Implementation code — MIT
+
+The MIT License applies to implementation/source code, including `scripts/**`,
+`.github/**`, and site implementation code/assets, unless a file carries a more
+specific license notice.
+
+SPDX license identifier: MIT
+Full text: `LICENSES/MIT.txt`
+
+Curated data and repository-authored documentation/content — CC0 1.0 Universal
+
+CC0 1.0 Universal applies to `data/**`, `docs/**`, `README.md`,
+`CONTRIBUTING.md`, and other repository-authored explanatory or factual
+content, unless a file carries a more specific license notice. Generated
+textual comparison content derived from those materials is likewise offered
+under CC0-1.0 to the extent the repository contributors hold rights in it.
+
+SPDX license identifier: CC0-1.0
+Full text: `LICENSES/CC0-1.0.txt`
+
+Third-party material
+
+Project names, trademarks, logos, screenshots, linked pages, quotations, and
+other third-party material are not relicensed by this repository merely
+because they are referenced, described, or linked here. Their original rights
+and license terms continue to apply.
+
+If a file contains an explicit license notice that differs from this overview,
+that file-specific notice controls.
