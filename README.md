@@ -62,6 +62,15 @@ Corrections and project suggestions are welcome. Use the repository issue forms 
 
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before changing classifications. Agent-based contributors should also read [`AGENTS.md`](AGENTS.md).
 
+## License
+
+This repository uses split permissive licensing by material type:
+
+- implementation/source code is licensed under the **MIT License**;
+- the curated dataset and repository-authored documentation/content are dedicated under **CC0 1.0 Universal**.
+
+See [`LICENSE`](LICENSE) for the exact file-level scope and [`LICENSES/`](LICENSES/) for the full license texts. Third-party project names, trademarks, logos, screenshots, linked pages, quotations, and other third-party material are not relicensed merely because this repository references them.
+
 ## Related resources
 
 Broader ecosystem lists remain valuable and complementary. In particular, [`debridmediamanager/awesome-debrid`](https://github.com/debridmediamanager/awesome-debrid) covers a much wider Debrid ecosystem than this project intends to duplicate.
