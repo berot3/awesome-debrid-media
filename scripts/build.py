@@ -228,7 +228,7 @@ def project_card(project: dict, metadata: dict) -> str:
         </div>
         <p class="small"><strong>Debrid providers:</strong> {esc(providers)}</p>
         <p class="small"><strong>GitHub:</strong> {esc(stars)} · last push {esc(pushed)} · <strong>verified:</strong> {esc(project['verified_at'])}</p>
-        <button class="select-project" type="button" data-select-project="{esc(project['id'])}" aria-pressed="false">Add to compare</button>
+        <button class="select-project" type="button" data-select-project="{esc(project['id'])}" data-project-name="{esc(project['name'])}" aria-label="Add {esc(project['name'])} to comparison" aria-pressed="false">Add to compare</button>
         <details>
           <summary>Evidence &amp; notes</summary>
           {project_details_html(project)}
@@ -251,7 +251,7 @@ def project_row(project: dict, metadata: dict) -> str:
           <a href="https://github.com/{esc(project['repository'])}">{esc(project['name'])}</a>
           <small>{esc(project['repository'])}</small>
           <a class="table-evidence-link" href="#evidence-{esc(project['id'])}" aria-label="Evidence &amp; notes for {esc(project['name'])}">Evidence &amp; notes</a>
-          <button class="select-project table-select-project" type="button" data-select-project="{esc(project['id'])}" aria-pressed="false">Add to compare</button>
+          <button class="select-project table-select-project" type="button" data-select-project="{esc(project['id'])}" data-project-name="{esc(project['name'])}" aria-label="Add {esc(project['name'])} to comparison" aria-pressed="false">Add to compare</button>
         </th>
         <td>{esc(ARCHITECTURE_LABELS[project['architecture']])}</td>
         <td>{esc(aio)}</td>
@@ -501,7 +501,7 @@ def main() -> int:
       <button id="empty-reset" type="button">Reset filters</button>
     </section>
 
-    <section id="shortlist-toolbar" class="shortlist-toolbar hidden" aria-label="Selected projects">
+    <section id="shortlist-toolbar" class="shortlist-toolbar hidden" aria-label="Selected projects" tabindex="-1">
       <span id="shortlist-status" role="status" aria-live="polite" aria-atomic="true">0 projects selected · maximum 4</span>
       <button id="shortlist-open" type="button" disabled>Compare selected</button>
       <button id="shortlist-clear" type="button">Clear</button>
@@ -649,6 +649,8 @@ def main() -> int:
         document.querySelectorAll('[data-select-project]').forEach(button => {{
           const selected = selectedProjects.has(button.dataset.selectProject);
           button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+          const projectName = button.dataset.projectName || 'project';
+          button.setAttribute('aria-label', selected ? `Remove ${{projectName}} from comparison` : `Add ${{projectName}} to comparison`);
           button.textContent = selected ? 'Selected' : 'Add to compare';
           button.disabled = !selected && atLimit;
         }});
@@ -666,6 +668,8 @@ def main() -> int:
           remove.type = 'button';
           remove.className = 'shortlist-remove';
           remove.dataset.shortlistRemove = projectId;
+          const projectName = source.querySelector('h2')?.textContent.trim() || 'project';
+          remove.setAttribute('aria-label', `Remove ${{projectName}} from shortlist`);
           remove.textContent = 'Remove from shortlist';
           clone.prepend(remove);
           shortlistGrid.appendChild(clone);
@@ -686,9 +690,16 @@ def main() -> int:
       }}
 
       function toggleProjectSelection(projectId) {{
-        if (selectedProjects.has(projectId)) selectedProjects.delete(projectId);
+        const wasFocused = shortlistFocused;
+        const wasSelected = selectedProjects.has(projectId);
+        if (wasSelected) selectedProjects.delete(projectId);
         else if (selectedProjects.size < shortlistLimit) selectedProjects.add(projectId);
         syncShortlistUi();
+        if (wasFocused && wasSelected) {{
+          const nextRemove = shortlistGrid.querySelector('[data-shortlist-remove]');
+          if (nextRemove) nextRemove.focus();
+          else search.focus();
+        }}
       }}
 
       function openShortlist() {{
@@ -702,13 +713,14 @@ def main() -> int:
       function closeShortlist() {{
         shortlistFocused = false;
         syncShortlistUi();
-        shortlistOpen.focus();
+        shortlistToolbar.focus();
       }}
 
       function clearShortlist() {{
         selectedProjects.clear();
         shortlistFocused = false;
         syncShortlistUi();
+        search.focus();
       }}
 
       function matches(item) {{
