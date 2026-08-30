@@ -475,6 +475,7 @@ def main() -> int:
         <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>
         <label class="check"><input id="jellyfin-filter" type="checkbox"> Jellyfin-compatible API</label>
         <button id="reset" type="button">Reset</button>
+        <button id="copy-share-link" type="button" aria-live="polite">Copy share link</button>
         <span id="result-count" role="status" aria-live="polite" aria-atomic="true">{len(projects)} projects shown</span>
       </div>
     </section>
@@ -525,6 +526,7 @@ def main() -> int:
       const jellyfin = document.querySelector('#jellyfin-filter');
       const reset = document.querySelector('#reset');
       const emptyReset = document.querySelector('#empty-reset');
+      const copyShareLink = document.querySelector('#copy-share-link');
       const count = document.querySelector('#result-count');
       const emptyState = document.querySelector('#empty-state');
       const filters = document.querySelector('.filters');
@@ -533,6 +535,69 @@ def main() -> int:
       const usableApplePaths = new Set(['released_first_party', 'source_only_first_party', 'compatible_third_party']);
       const externalDeps = new Set({json.dumps(sorted(EXTERNAL_DEPENDENCIES))});
       const desktopSticky = window.matchMedia('(min-width: 1200px)');
+
+      function setSelectFromParam(control, value) {{
+        const valid = [...control.options].some(option => option.value === value);
+        control.value = valid ? value : 'all';
+      }}
+
+      function restoreFromUrl() {{
+        const params = new URLSearchParams(window.location.search);
+        search.value = params.get('q') || '';
+        setSelectFromParam(aio, params.get('aio'));
+        setSelectFromParam(dependency, params.get('dep'));
+        setSelectFromParam(apple, params.get('apple'));
+        const selectedArchitectures = new Set(params.getAll('arch'));
+        architecture.forEach(control => control.checked = selectedArchitectures.has(control.value));
+        usenet.checked = params.get('usenet') === '1';
+        jellyfin.checked = params.get('jellyfin') === '1';
+      }}
+
+      function urlFromControls() {{
+        const params = new URLSearchParams();
+        const query = search.value.trim();
+        if (query) params.set('q', query);
+        if (aio.value !== 'all') params.set('aio', aio.value);
+        architecture.filter(control => control.checked).forEach(control => params.append('arch', control.value));
+        if (dependency.value !== 'all') params.set('dep', dependency.value);
+        if (apple.value !== 'all') params.set('apple', apple.value);
+        if (usenet.checked) params.set('usenet', '1');
+        if (jellyfin.checked) params.set('jellyfin', '1');
+        const queryString = params.toString();
+        return window.location.pathname + (queryString ? '?' + queryString : '') + window.location.hash;
+      }}
+
+      function syncUrl() {{
+        window.history.replaceState(null, '', urlFromControls());
+      }}
+
+      async function copyCurrentShareLink() {{
+        syncUrl();
+        const value = window.location.href;
+        let copied = false;
+        try {{
+          if (navigator.clipboard && window.isSecureContext) {{
+            await navigator.clipboard.writeText(value);
+            copied = true;
+          }}
+        }} catch (error) {{
+          copied = false;
+        }}
+        if (!copied) {{
+          const helper = document.createElement('textarea');
+          helper.value = value;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.select();
+          copied = document.execCommand('copy');
+          helper.remove();
+        }}
+        const original = 'Copy share link';
+        copyShareLink.textContent = copied ? 'Copied' : 'Copy failed';
+        window.setTimeout(() => copyShareLink.textContent = original, 1600);
+      }}
 
       function matches(item) {{
         const query = search.value.trim().toLowerCase();
@@ -570,12 +635,13 @@ def main() -> int:
         document.documentElement.style.setProperty('--sticky-table-top', `${{offset}}px`);
       }}
 
-      function apply() {{
+      function apply(syncState = true) {{
         syncArchitectureSummary();
         items.forEach(item => item.classList.toggle('hidden', !matches(item)));
         const visibleCards = [...document.querySelectorAll('.project-card.filterable')].filter(item => !item.classList.contains('hidden')).length;
         count.textContent = `${{visibleCards}} project${{visibleCards === 1 ? '' : 's'}} shown`;
         emptyState.classList.toggle('hidden', visibleCards !== 0);
+        if (syncState) syncUrl();
       }}
 
       function resetFilters() {{
@@ -593,8 +659,14 @@ def main() -> int:
       presetAioApple.addEventListener('click', applyAioApplePreset);
       reset.addEventListener('click', resetFilters);
       emptyReset.addEventListener('click', resetFilters);
+      copyShareLink.addEventListener('click', copyCurrentShareLink);
+      window.addEventListener('popstate', () => {{
+        restoreFromUrl();
+        apply(false);
+      }});
       window.addEventListener('resize', syncStickyTableOffset);
       if ('ResizeObserver' in window) new ResizeObserver(syncStickyTableOffset).observe(filters);
+      restoreFromUrl();
       syncStickyTableOffset();
       apply();
     }})();
