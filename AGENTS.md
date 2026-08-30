@@ -20,6 +20,7 @@ This repository is curated, evidence-based reference material first and a static
 - Generic Stremio-addon support is not automatically `explicit` AIOStreams support.
 - A codebase containing tvOS support is not proof that an installable public Apple TV release exists.
 - Never infer one Riven implementation's features from another. Riven TS, Riven RS, and legacy Riven are separate projects with separate evidence.
+- Evidence age is a maintenance signal only. A stale `checked_at` or `verified_at` date never proves that the underlying claim is false or unsupported.
 
 ## AIOStreams states
 
@@ -54,7 +55,7 @@ Before changing project data:
 
 1. Read `docs/definitions.md`, `docs/methodology.md`, and `docs/schema.md`.
 2. Verify claims using current first-party sources whenever possible.
-3. Update `verified_at` for claims that were actually rechecked; do not refresh dates mechanically.
+3. Update an evidence entry's `checked_at` only when that specific source/claim was actually rechecked. Update project-level `verified_at` only after a meaningful record-level manual verification; do not refresh either date mechanically.
 4. Run:
 
 ```bash
@@ -63,6 +64,15 @@ python3 scripts/build.py
 ```
 
 5. Review generated output for factual and presentation regressions.
+
+## Freshness / re-audit workflow
+
+- The default advisory re-audit threshold is 120 days.
+- Run `python3 scripts/freshness.py` to list project records and evidence entries due for recheck.
+- For reproducible agent work, use an explicit date such as `python3 scripts/freshness.py --as-of YYYY-MM-DD`.
+- Stale items are `needs recheck`, not `incorrect`, `unsupported`, `none`, `no`, or `unconfirmed`.
+- The freshness report is advisory and must not be turned into a build failure merely because items are old.
+- Follow `docs/freshness.md` for the complete re-audit procedure and date semantics.
 
 ## Scope controls
 
