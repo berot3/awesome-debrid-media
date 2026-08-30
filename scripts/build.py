@@ -339,7 +339,7 @@ def main() -> int:
     }}
     @media (max-width: 560px) {{
       main {{ width: min(100% - 1rem, 1480px); }}
-      .filters {{ top: .35rem; }}
+      .filters {{ position: static; }}
       .status-grid {{ grid-template-columns: 1fr; }}
       #result-count {{ width: 100%; margin-left: 0; }}
     }}
