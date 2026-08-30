@@ -1,0 +1,42 @@
+name: Issue 29 filter containment patch
+
+on:
+  push:
+    branches:
+      - work/issue-29-filter-containment
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: work/issue-29-filter-containment
+
+      - name: Apply Issue 29 patch
+        run: python3 scripts/issue29_filter_containment_patch.py
+
+      - name: Validate and build
+        run: |
+          python3 scripts/validate.py
+          python3 scripts/build.py
+          test -s dist/index.html
+          grep -q 'grid-template-columns: minmax(0, 1fr)' scripts/build.py
+          grep -q 'name="comparison-filter-menu"' scripts/build.py
+          grep -q '@media (max-width: 919px)' scripts/build.py
+
+      - name: Commit implementation
+        run: |
+          if git diff --quiet -- scripts/build.py; then
+            echo "No build.py changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/build.py
+          git commit -m "Contain narrow filter controls and menus"
+          git push origin HEAD:work/issue-29-filter-containment
