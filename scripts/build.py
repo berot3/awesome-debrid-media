@@ -224,8 +224,8 @@ def project_row(project: dict, metadata: dict) -> str:
         <td>{esc(apple)}</td>
         <td>{esc(CAPABILITY_LABELS[project['api']['jellyfin_compatible']])}</td>
         <td>{esc(dependency)}</td>
-        <td>{esc(stars)}{esc(archived_mark)}<small>push {esc(pushed)}</small></td>
-        <td>{esc(project['verified_at'])}</td>
+        <td>{esc(stars)}{esc(archived_mark)}<small class="metadata-nowrap">push {esc(pushed)}</small></td>
+        <td class="metadata-nowrap">{esc(project['verified_at'])}</td>
       </tr>
     """
 
@@ -267,6 +267,7 @@ def main() -> int:
       --soft: color-mix(in srgb, CanvasText 6%, Canvas);
       --muted: color-mix(in srgb, CanvasText 66%, transparent);
       --accent: #5577ff;
+      --sticky-table-top: 0px;
     }}
     * {{ box-sizing: border-box; }}
     body {{ margin: 0; background: Canvas; color: CanvasText; }}
@@ -293,6 +294,8 @@ def main() -> int:
     button:hover {{ border-color: var(--muted); }}
     .check {{ display: inline-flex; align-items: center; gap: .38rem; padding: .35rem .15rem; white-space: nowrap; }}
     #result-count {{ margin-left: auto; color: var(--muted); font-size: .9rem; }}
+    .empty-state {{ margin: 0 0 1.4rem; padding: 1rem 1.1rem; border: 1px dashed var(--border); border-radius: 1rem; background: var(--soft); }}
+    .empty-state p {{ margin: 0 0 .7rem; }}
     .cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 1rem; }}
     .project-card {{ padding: 1.05rem; border: 1px solid var(--border); border-radius: 1rem; background: Canvas; }}
     .project-card__topline {{ display: flex; justify-content: space-between; gap: .7rem; align-items: flex-start; }}
@@ -313,13 +316,15 @@ def main() -> int:
     .evidence-list li {{ margin: .5rem 0; }}
     .evidence-type {{ color: var(--muted); font-size: .75rem; }}
     .muted {{ color: var(--muted); }}
+    .sr-only {{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }}
     .table-wrap {{ display: none; overflow-x: auto; border: 1px solid var(--border); border-radius: 1rem; }}
     table {{ width: 100%; border-collapse: collapse; font-size: .84rem; }}
     th, td {{ padding: .72rem .65rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }}
-    thead th {{ position: sticky; top: 0; background: Canvas; white-space: nowrap; }}
+    thead th {{ position: sticky; top: var(--sticky-table-top); z-index: 4; background: Canvas; white-space: nowrap; box-shadow: 0 1px 0 var(--border); }}
     tbody tr:last-child th, tbody tr:last-child td {{ border-bottom: 0; }}
     tbody th {{ min-width: 155px; }}
     tbody th small, td small {{ display: block; margin-top: .18rem; color: var(--muted); font-weight: 400; }}
+    .metadata-nowrap {{ white-space: nowrap; }}
     .table-evidence-link {{ display: inline-block; margin-top: .35rem; font-size: .8rem; font-weight: 650; }}
     .desktop-project-details {{ display: none; }}
     .desktop-project-detail {{ scroll-margin-top: 6rem; padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: 1rem; background: Canvas; }}
@@ -336,6 +341,9 @@ def main() -> int:
       .desktop-project-details > h2 {{ margin: 0; font-size: 1.35rem; }}
       .filters {{ grid-template-columns: 1fr auto; align-items: center; }}
       .filter-row:first-child {{ min-width: 0; }}
+    }}
+    @media (min-width: 1200px) {{
+      .table-wrap {{ overflow: visible; }}
     }}
     @media (max-width: 560px) {{
       main {{ width: min(100% - 1rem, 1480px); }}
@@ -392,8 +400,13 @@ def main() -> int:
         <label class="check"><input id="usenet-filter" type="checkbox"> Usenet</label>
         <label class="check"><input id="jellyfin-filter" type="checkbox"> Jellyfin-compatible API</label>
         <button id="reset" type="button">Reset</button>
-        <span id="result-count">{len(projects)} shown</span>
+        <span id="result-count" role="status" aria-live="polite" aria-atomic="true">{len(projects)} projects shown</span>
       </div>
+    </section>
+
+    <section id="empty-state" class="empty-state hidden" aria-label="No matching projects">
+      <p><strong>No projects match the current filters.</strong> Broaden the search or reset the comparison.</p>
+      <button id="empty-reset" type="button">Reset filters</button>
     </section>
 
     <section class="cards" aria-label="Project comparison cards">
@@ -402,6 +415,7 @@ def main() -> int:
 
     <div class="table-wrap">
       <table>
+        <caption class="sr-only">Comparison of self-hosted Debrid and Usenet media projects by architecture, AIOStreams integration, capabilities, Apple TV path, backend model, GitHub activity and verification date.</caption>
         <thead>
           <tr>
             <th>Project</th><th>Architecture</th><th>AIOStreams</th><th>Debrid</th><th>Usenet</th><th>Apple TV</th><th>Jellyfin API</th><th>Backend model</th><th>GitHub</th><th>Verified</th>
@@ -431,11 +445,15 @@ def main() -> int:
       const usenet = document.querySelector('#usenet-filter');
       const jellyfin = document.querySelector('#jellyfin-filter');
       const reset = document.querySelector('#reset');
+      const emptyReset = document.querySelector('#empty-reset');
       const count = document.querySelector('#result-count');
+      const emptyState = document.querySelector('#empty-state');
+      const filters = document.querySelector('.filters');
       const items = [...document.querySelectorAll('.filterable')];
       const compatibleAio = new Set(['explicit', 'stremio_protocol', 'plugin_or_bridge']);
       const applePaths = new Set(['released_first_party', 'source_only_first_party', 'compatible_third_party']);
       const externalDeps = new Set({json.dumps(sorted(EXTERNAL_DEPENDENCIES))});
+      const desktopSticky = window.matchMedia('(min-width: 1200px)');
 
       function matches(item) {{
         const query = search.value.trim().toLowerCase();
@@ -451,14 +469,19 @@ def main() -> int:
         return true;
       }}
 
+      function syncStickyTableOffset() {{
+        const offset = desktopSticky.matches ? Math.ceil(filters.getBoundingClientRect().height + 8) : 0;
+        document.documentElement.style.setProperty('--sticky-table-top', `${{offset}}px`);
+      }}
+
       function apply() {{
         items.forEach(item => item.classList.toggle('hidden', !matches(item)));
         const visibleCards = [...document.querySelectorAll('.project-card.filterable')].filter(item => !item.classList.contains('hidden')).length;
-        count.textContent = `${{visibleCards}} shown`;
+        count.textContent = `${{visibleCards}} project${{visibleCards === 1 ? '' : 's'}} shown`;
+        emptyState.classList.toggle('hidden', visibleCards !== 0);
       }}
 
-      [search, aio, dependency, apple, usenet, jellyfin].forEach(control => control.addEventListener('input', apply));
-      reset.addEventListener('click', () => {{
+      function resetFilters() {{
         search.value = '';
         aio.value = 'all';
         dependency.value = 'all';
@@ -466,7 +489,14 @@ def main() -> int:
         usenet.checked = false;
         jellyfin.checked = false;
         apply();
-      }});
+      }}
+
+      [search, aio, dependency, apple, usenet, jellyfin].forEach(control => control.addEventListener('input', apply));
+      reset.addEventListener('click', resetFilters);
+      emptyReset.addEventListener('click', resetFilters);
+      window.addEventListener('resize', syncStickyTableOffset);
+      if ('ResizeObserver' in window) new ResizeObserver(syncStickyTableOffset).observe(filters);
+      syncStickyTableOffset();
       apply();
     }})();
   </script>
