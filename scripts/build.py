@@ -331,6 +331,9 @@ def main() -> int:
     .filter-menu[open] > summary::after {{ content: " ▴"; }}
     .filter-menu fieldset {{ position: absolute; z-index: 8; top: calc(100% + .35rem); left: 0; display: grid; gap: .25rem; min-width: min(280px, calc(100vw - 2rem)); margin: 0; padding: .65rem .75rem; border: 1px solid var(--border); border-radius: .7rem; background: Canvas; box-shadow: 0 .5rem 1.5rem color-mix(in srgb, CanvasText 12%, transparent); }}
     .filter-menu .filter-option {{ padding: .3rem .1rem; }}
+    .filter-menu .preset-option {{ display: grid; gap: .45rem; max-width: min(360px, calc(100vw - 2rem)); }}
+    .filter-menu .preset-option p {{ margin: 0; white-space: normal; }}
+    .filter-menu .preset-option button {{ text-align: left; white-space: normal; }}
     button {{ cursor: pointer; }}
     button:hover {{ border-color: var(--muted); }}
     .check {{ display: inline-flex; align-items: center; gap: .38rem; padding: .35rem .15rem; white-space: nowrap; }}
@@ -428,6 +431,14 @@ def main() -> int:
     <section class="filters" aria-label="Comparison filters">
       <div class="filter-row">
         <input id="search" type="search" placeholder="Search name, repo, description, provider…" aria-label="Search project name, repository, description, architecture or Debrid provider">
+        <details id="preset-menu" class="filter-menu">
+          <summary>Quick filter</summary>
+          <fieldset class="preset-option">
+            <legend class="sr-only">Use-case presets</legend>
+            <button id="preset-aio-apple" type="button">AIOStreams-compatible + Apple TV path</button>
+            <p class="small">Sets AIOStreams to “Any compatible path” and Apple TV to “any usable path”. Other filters stay unchanged and can be refined afterward.</p>
+          </fieldset>
+        </details>
         <select id="aio-filter" aria-label="AIOStreams support">
           <option value="all">All AIOStreams states</option>
           <option value="compatible">Any compatible path (explicit / protocol / bridge)</option>
@@ -503,6 +514,8 @@ def main() -> int:
       const dependency = document.querySelector('#dependency-filter');
       const architecture = [...document.querySelectorAll('input[name="architecture"]')];
       const architectureSummary = document.querySelector('#architecture-summary');
+      const presetMenu = document.querySelector('#preset-menu');
+      const presetAioApple = document.querySelector('#preset-aio-apple');
       const apple = document.querySelector('#apple-filter');
       const usenet = document.querySelector('#usenet-filter');
       const jellyfin = document.querySelector('#jellyfin-filter');
@@ -532,6 +545,13 @@ def main() -> int:
         if (usenet.checked && item.dataset.usenet !== 'yes') return false;
         if (jellyfin.checked && item.dataset.jellyfin !== 'yes') return false;
         return true;
+      }}
+
+      function applyAioApplePreset() {{
+        aio.value = 'compatible';
+        apple.value = 'any-path';
+        presetMenu.open = false;
+        apply();
       }}
 
       function syncArchitectureSummary() {{
@@ -566,6 +586,7 @@ def main() -> int:
       }}
 
       [search, aio, dependency, apple, usenet, jellyfin, ...architecture].forEach(control => control.addEventListener('input', apply));
+      presetAioApple.addEventListener('click', applyAioApplePreset);
       reset.addEventListener('click', resetFilters);
       emptyReset.addEventListener('click', resetFilters);
       window.addEventListener('resize', syncStickyTableOffset);
