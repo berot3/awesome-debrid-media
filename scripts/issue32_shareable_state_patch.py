@@ -22,13 +22,13 @@ for old, new in replacements:
     elif new not in text:
         raise SystemExit(f"expected Issue 32 target not found: {old}")
 
-marker = "      function matches(item) {{{{\n"
-helpers = """      function setSelectFromParam(control, value) {{{{
+marker = "      function matches(item) {{\n"
+helpers = """      function setSelectFromParam(control, value) {{
         const valid = [...control.options].some(option => option.value === value);
         control.value = valid ? value : 'all';
-      }}}}
+      }}
 
-      function restoreFromUrl() {{{{
+      function restoreFromUrl() {{
         const params = new URLSearchParams(window.location.search);
         search.value = params.get('q') || '';
         setSelectFromParam(aio, params.get('aio'));
@@ -38,9 +38,9 @@ helpers = """      function setSelectFromParam(control, value) {{{{
         architecture.forEach(control => control.checked = selectedArchitectures.has(control.value));
         usenet.checked = params.get('usenet') === '1';
         jellyfin.checked = params.get('jellyfin') === '1';
-      }}}}
+      }}
 
-      function urlFromControls() {{{{
+      function urlFromControls() {{
         const params = new URLSearchParams();
         const query = search.value.trim();
         if (query) params.set('q', query);
@@ -52,25 +52,25 @@ helpers = """      function setSelectFromParam(control, value) {{{{
         if (jellyfin.checked) params.set('jellyfin', '1');
         const queryString = params.toString();
         return window.location.pathname + (queryString ? '?' + queryString : '') + window.location.hash;
-      }}}}
+      }}
 
-      function syncUrl() {{{{
+      function syncUrl() {{
         window.history.replaceState(null, '', urlFromControls());
-      }}}}
+      }}
 
-      async function copyCurrentShareLink() {{{{
+      async function copyCurrentShareLink() {{
         syncUrl();
         const value = window.location.href;
         let copied = false;
-        try {{{{
-          if (navigator.clipboard && window.isSecureContext) {{{{
+        try {{
+          if (navigator.clipboard && window.isSecureContext) {{
             await navigator.clipboard.writeText(value);
             copied = true;
-          }}}}
-        }}}} catch (error) {{{{
+          }}
+        }} catch (error) {{
           copied = false;
-        }}}}
-        if (!copied) {{{{
+        }}
+        if (!copied) {{
           const helper = document.createElement('textarea');
           helper.value = value;
           helper.setAttribute('readonly', '');
@@ -80,11 +80,11 @@ helpers = """      function setSelectFromParam(control, value) {{{{
           helper.select();
           copied = document.execCommand('copy');
           helper.remove();
-        }}}}
+        }}
         const original = 'Copy share link';
         copyShareLink.textContent = copied ? 'Copied' : 'Copy failed';
         window.setTimeout(() => copyShareLink.textContent = original, 1600);
-      }}}}
+      }}
 
 """
 if helpers not in text:
@@ -92,22 +92,22 @@ if helpers not in text:
         raise SystemExit("expected matches() marker not found")
     text = text.replace(marker, helpers + marker, 1)
 
-old_apply = """      function apply() {{{{
+old_apply = """      function apply() {{
         syncArchitectureSummary();
         items.forEach(item => item.classList.toggle('hidden', !matches(item)));
         const visibleCards = [...document.querySelectorAll('.project-card.filterable')].filter(item => !item.classList.contains('hidden')).length;
         count.textContent = `${{visibleCards}} project${{visibleCards === 1 ? '' : 's'}} shown`;
         emptyState.classList.toggle('hidden', visibleCards !== 0);
-      }}}}
+      }}
 """
-new_apply = """      function apply(syncState = true) {{{{
+new_apply = """      function apply(syncState = true) {{
         syncArchitectureSummary();
         items.forEach(item => item.classList.toggle('hidden', !matches(item)));
         const visibleCards = [...document.querySelectorAll('.project-card.filterable')].filter(item => !item.classList.contains('hidden')).length;
         count.textContent = `${{visibleCards}} project${{visibleCards === 1 ? '' : 's'}} shown`;
         emptyState.classList.toggle('hidden', visibleCards !== 0);
         if (syncState) syncUrl();
-      }}}}
+      }}
 """
 if old_apply in text:
     text = text.replace(old_apply, new_apply, 1)
@@ -128,10 +128,10 @@ new_events = """      [search, aio, dependency, apple, usenet, jellyfin, ...arch
       reset.addEventListener('click', resetFilters);
       emptyReset.addEventListener('click', resetFilters);
       copyShareLink.addEventListener('click', copyCurrentShareLink);
-      window.addEventListener('popstate', () => {{{{
+      window.addEventListener('popstate', () => {{
         restoreFromUrl();
         apply(false);
-      }}}});
+      }});
       window.addEventListener('resize', syncStickyTableOffset);
       if ('ResizeObserver' in window) new ResizeObserver(syncStickyTableOffset).observe(filters);
       restoreFromUrl();
