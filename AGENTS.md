@@ -74,6 +74,14 @@ python3 scripts/build.py
 - The freshness report is advisory and must not be turned into a build failure merely because items are old.
 - Follow `docs/freshness.md` for the complete re-audit procedure and date semantics.
 
+## Evidence link health
+
+- Run `python3 scripts/check_evidence_links.py` to inspect stored evidence URLs.
+- A redirect, 404/410, access/rate-limit response, timeout, or network failure is a citation-maintenance signal only. It never proves that the underlying project claim is false or unsupported.
+- Never change capability states, evidence entries, `checked_at`, or `verified_at` automatically from link-check output.
+- Manually re-open or replace the source and re-verify the claim before editing evidence or dates.
+- Follow `docs/evidence-links.md` for result categories and the remediation procedure.
+
 ## Scope controls
 
 Do not:
