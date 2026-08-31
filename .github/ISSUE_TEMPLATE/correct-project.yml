@@ -3,10 +3,25 @@ description: Report stale, incorrect, or insufficiently supported information in
 title: "Correction: "
 labels: []
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep Awesome Debrid Media accurate.
+
+        Evidence rules still apply to corrections:
+        - `not found` is not the same as `not supported`;
+        - generic Debrid support is not proof of AIOStreams support;
+        - generic Stremio-addon support is not automatically explicit AIOStreams support;
+        - source-only tvOS is not a public Apple TV release;
+        - separate Riven implementations must be verified independently;
+        - inclusion is not endorsement.
+
+        Please propose the smallest change that current evidence actually supports.
+
   - type: input
     id: project
     attributes:
-      label: Project
+      label: Affected project
       placeholder: Project name or owner/repo
     validations:
       required: true
@@ -14,8 +29,8 @@ body:
   - type: textarea
     id: current
     attributes:
-      label: What is currently wrong or stale?
-      description: Quote or summarize the field/classification that needs correction.
+      label: Exact field or claim believed to be wrong or stale
+      description: Quote or summarize the current field/classification that needs correction.
     validations:
       required: true
 
@@ -23,18 +38,7 @@ body:
     id: correction
     attributes:
       label: Proposed correction
-      description: State the smallest factual change that the current evidence supports.
-    validations:
-      required: true
-
-  - type: textarea
-    id: evidence
-    attributes:
-      label: Current evidence
-      description: Prefer current first-party documentation or source code. Explain what each source establishes.
-      placeholder: |
-        - https://github.com/owner/repo/blob/main/README.md — now documents ...
-        - https://github.com/owner/repo/releases/... — public tvOS release now exists ...
+      description: State the smallest factual change that the current evidence supports. Unknown / unconfirmed remains valid where evidence is incomplete.
     validations:
       required: true
 
@@ -49,16 +53,61 @@ body:
         - Apple TV / client availability
         - Jellyfin-compatible API
         - Project status / canonical repository
+        - Evidence / verification date
         - Other
     validations:
       required: true
 
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence URL(s)
+      description: Prefer current first-party material. Explain what each source establishes rather than only pasting links.
+      placeholder: |
+        - https://github.com/owner/repo/blob/main/README.md — now documents ...
+        - https://github.com/owner/repo/releases/... — public tvOS release now exists ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: evidence_type
+    attributes:
+      label: Strongest evidence type
+      description: Choose the best source supporting the proposed correction.
+      options:
+        - First-party official documentation
+        - First-party repository source code
+        - First-party official README
+        - First-party issue / pull request / release
+        - Direct maintainer statement
+        - Community / secondary source only
+        - Other / unsure
+    validations:
+      required: true
+
+  - type: input
+    id: checked_at
+    attributes:
+      label: Date source was checked, if known
+      description: Optional. Use YYYY-MM-DD when reasonably known; maintainers will independently verify freshness before changing curated dates.
+      placeholder: YYYY-MM-DD
+    validations:
+      required: false
+
+  - type: textarea
+    id: uncertainty
+    attributes:
+      label: Remaining uncertainty or conflicting evidence
+      description: Note version differences, contradictory sources, or anything the maintainer should verify before changing the dataset.
+    validations:
+      required: false
+
   - type: checkboxes
     id: semantics
     attributes:
-      label: Classification check
+      label: Before submitting
       options:
-        - label: I have not treated “not found” as “not supported.”
+        - label: I understand that this report does not automatically change curated data; the evidence and classification will be independently reviewed.
           required: true
-        - label: If this changes a client release state, the evidence distinguishes source code from an installable public release.
-          required: false
+        - label: I have not treated “not found” as proof of “not supported.”
+          required: true
