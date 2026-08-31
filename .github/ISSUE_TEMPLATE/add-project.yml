@@ -8,6 +8,15 @@ body:
       value: |
         Thanks for helping expand Awesome Debrid Media. Inclusion is based on relevance and evidence, not endorsement.
 
+        Please classify conservatively:
+        - `not found` is not the same as `not supported`;
+        - generic Debrid support is not proof of AIOStreams support;
+        - generic Stremio-addon support is not automatically explicit AIOStreams support;
+        - source-only tvOS is not a public Apple TV release;
+        - separate Riven implementations must be verified independently and must not inherit facts from one another.
+
+        Unknown / not found is a valid answer. Do not guess.
+
   - type: input
     id: project
     attributes:
@@ -19,7 +28,7 @@ body:
   - type: input
     id: repository
     attributes:
-      label: Repository
+      label: Canonical repository
       description: Prefer the canonical upstream repository.
       placeholder: https://github.com/owner/repo
     validations:
@@ -43,8 +52,8 @@ body:
   - type: textarea
     id: relevance
     attributes:
-      label: Why is it relevant?
-      description: Explain how it fits the Debrid/Usenet media-server/backend ecosystem.
+      label: Why does it belong in scope?
+      description: Briefly explain the server-side role and how it fits the Debrid/Usenet media ecosystem.
     validations:
       required: true
 
@@ -52,33 +61,75 @@ body:
     id: aiostreams
     attributes:
       label: AIOStreams relationship
-      description: Choose conservatively. “I could not find it” is not the same as “not supported.”
+      description: Choose conservatively. Unknown / not found is valid.
       options:
         - Explicit AIOStreams integration
         - Generic Stremio-addon integration
         - Plugin / bridge integration
-        - Unconfirmed / unsure
+        - Unknown / not found
         - No first-party support with evidence
         - Documented scope conflict
     validations:
       required: true
 
+  - type: input
+    id: aiostreams_evidence
+    attributes:
+      label: AIOStreams evidence URL, if claimed
+      description: If you selected an integration/support state, link the strongest first-party source. Leave blank for unknown / not found.
+      placeholder: https://github.com/owner/repo/blob/main/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: Debrid / Usenet relationship
+      description: Note any claimed Debrid or Usenet path and the relevant provider/protocol context. Unknown / not found is acceptable.
+      placeholder: |
+        Debrid: ...
+        Usenet: ...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: apple_tv
+    attributes:
+      label: Apple TV path
+      description: Distinguish an installable release from source code only. Unknown / not found is valid.
+      options:
+        - Unknown / not found
+        - First-party installable release
+        - First-party source only
+        - Compatible third-party client
+        - No Apple TV path with evidence
+    validations:
+      required: true
+
+  - type: input
+    id: apple_tv_evidence
+    attributes:
+      label: Apple TV evidence URL, if claimed
+      placeholder: https://github.com/owner/repo/...
+    validations:
+      required: false
+
   - type: textarea
     id: evidence
     attributes:
-      label: Evidence
-      description: Link official docs, source code, README, issues/PRs/releases, or direct maintainer statements that support the important claims.
+      label: First-party evidence / research links
+      description: Link official docs, source code, README, issues/PRs/releases, or direct maintainer statements. State what each source establishes. If a claim remains unknown, say what first-party material you checked instead of converting absence into a negative claim.
       placeholder: |
-        - https://github.com/owner/repo/blob/main/README.md — documents ...
-        - https://github.com/owner/repo/blob/main/path/to/source — implements ...
+        - Official README: https://github.com/owner/repo/blob/main/README.md — documents ...
+        - Source code: https://github.com/owner/repo/blob/main/path/to/source — implements ...
     validations:
       required: true
 
   - type: textarea
-    id: clients
+    id: uncertainty
     attributes:
-      label: Client / TV notes
-      description: Include Apple TV/tvOS, Android TV, web, or Jellyfin/Emby/Plex client paths if known. Distinguish source code from a public release.
+      label: Known uncertainty or conflicts
+      description: Record anything ambiguous, contradictory, version-specific, or not yet verified.
     validations:
       required: false
 
@@ -87,7 +138,7 @@ body:
     attributes:
       label: Before submitting
       options:
-        - label: I understand that a missing search result is not proof that a feature is unsupported.
+        - label: I understand that submitted classifications are evidence leads and will be independently reviewed before curated data changes.
           required: true
-        - label: I have linked evidence for the claims I am asking the project to publish.
+        - label: I have not treated “not found” as proof of “not supported.”
           required: true
