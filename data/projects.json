@@ -1606,6 +1606,344 @@
         }
       ],
       "verified_at": "2026-08-30"
+    },
+    {
+      "id": "aio-jellyfin-wrapper",
+      "name": "AIO Jellyfin Wrapper",
+      "repository": "rodrigocabraln/aio-jellyfin-wrapper",
+      "description": "Lightweight Jellyfin-compatible wrapper that exposes AIOStreams search, metadata, source selection, and playback handoff to Jellyfin clients without proxying media bytes.",
+      "architecture": "jellyfin_compatible_server",
+      "dependency": "independent",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "The wrapper is purpose-built around a configured AIOStreams manifest and presents AIOStreams results through a Jellyfin-compatible server surface.",
+        "evidence": [
+          {
+            "claim": "The README describes the project as a lightweight wrapper that presents AIOStreams to Jellyfin clients and requires an AIOStreams manifest URL.",
+            "url": "https://github.com/rodrigocabraln/aio-jellyfin-wrapper/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-31"
+          }
+        ]
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "yes",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "yes"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "The wrapper targets Jellyfin clients generally; an Apple TV-specific client path was not separately verified for this record.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "The wrapper targets Jellyfin clients generally; an Android TV-specific client path was not separately verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "The wrapper presents a Jellyfin-compatible server surface, but browser playback was not separately verified for this record.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README documents a Jellyfin-compatible API subset backed by AIOStreams, direct playback handoff, and handling for Debrid/direct and Usenet stream metadata.",
+          "url": "https://github.com/rodrigocabraln/aio-jellyfin-wrapper/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        }
+      ],
+      "verified_at": "2026-08-31"
+    },
+    {
+      "id": "wisp",
+      "name": "Wisp",
+      "repository": "drondeseries/wisp",
+      "description": "AIOStreams-backed request-to-playback engine that exposes selected Debrid or Usenet media through a self-healing virtual filesystem for external media servers.",
+      "architecture": "media_automation_vfs",
+      "dependency": "requires_media_server",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "Wisp is designed specifically around AIOStreams and uses its search API to resolve virtual media files on demand.",
+        "evidence": [
+          {
+            "claim": "The README describes Wisp as a standalone request-to-playback engine for AIOStreams and documents the AIOStreams search/resolution flow.",
+            "url": "https://github.com/drondeseries/wisp/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-31"
+          }
+        ]
+      },
+      "stremio_protocol": "unknown",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "yes",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to the external media-server/client stack; no Apple TV-specific path was separately verified.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to the external media-server/client stack; no Android TV-specific path was separately verified.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "Wisp provides the VFS/playback backend rather than a separately verified browser playback client.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes a media-server-to-Wisp VFS flow that resolves AIOStreams results and explicitly carries Debrid and Usenet playback through the backend.",
+          "url": "https://github.com/drondeseries/wisp/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        }
+      ],
+      "verified_at": "2026-08-31"
+    },
+    {
+      "id": "decypharr",
+      "name": "Decypharr",
+      "repository": "sirrobot01/decypharr",
+      "description": "Debrid and Usenet media gateway that exposes Arr-compatible download APIs and read-only NFS/SMB virtual libraries for downstream media servers.",
+      "architecture": "media_automation_vfs",
+      "dependency": "requires_media_server",
+      "aiostreams": {
+        "state": "unconfirmed",
+        "note": "No current first-party AIOStreams integration was confirmed during this survey.",
+        "evidence": []
+      },
+      "stremio_protocol": "unknown",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [
+          "Real-Debrid",
+          "TorBox",
+          "Debrid-Link",
+          "AllDebrid",
+          "Premiumize"
+        ],
+        "usenet": "yes",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to downstream media servers; no Apple TV-specific client path was verified for this record.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to downstream media servers; no Android TV-specific client path was verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "Decypharr provides a server-side media gateway and management surface; browser media playback was not verified as a client path.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The canonical README describes Decypharr as a media gateway for Debrid services and Usenet, with qBittorrent/SABnzbd-compatible APIs, direct NNTP streaming, and NFS/SMB library presentation.",
+          "url": "https://github.com/sirrobot01/decypharr/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "claim": "The README lists Real-Debrid, TorBox, Debrid-Link, AllDebrid, and Premiumize among supported Debrid providers.",
+          "url": "https://github.com/sirrobot01/decypharr/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        }
+      ],
+      "verified_at": "2026-08-31"
+    },
+    {
+      "id": "mosaic",
+      "name": "Mosaic",
+      "repository": "mosaic-media/platform",
+      "description": "Modular local-first home media platform with its own playback origin and extension system, including a dedicated first-party AIOStreams stream provider.",
+      "architecture": "full_media_server",
+      "dependency": "independent",
+      "aiostreams": {
+        "state": "explicit",
+        "note": "Mosaic has a dedicated first-party AIOStreams extension module that supplies streams and subtitles from a configured AIOStreams instance.",
+        "evidence": [
+          {
+            "claim": "The first-party AIOStreams module README describes it as a dedicated Mosaic stream provider sourcing from AIOStreams.",
+            "url": "https://github.com/mosaic-media/module-aiostreams/blob/main/README.md",
+            "source_type": "readme",
+            "checked_at": "2026-08-31"
+          }
+        ]
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [],
+        "usenet": "unknown",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "No Apple TV-specific client path was verified for this record.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "No Android TV-specific client path was verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "The platform repository documents a first-party web Shell in the development stack, but a released browser playback client was not separately verified.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The platform README describes Mosaic as a home media center and documents its playback origin plus modular capability architecture.",
+          "url": "https://github.com/mosaic-media/platform/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        },
+        {
+          "claim": "The AIOStreams module README says the module uses the Stremio addon protocol and leaves the configured Debrid service and stream-source selection to the AIOStreams instance.",
+          "url": "https://github.com/mosaic-media/module-aiostreams/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        }
+      ],
+      "verified_at": "2026-08-31"
+    },
+    {
+      "id": "nebula-bridge",
+      "name": "Nebula Bridge",
+      "repository": "AmbientFlare/Nebula-Bridge",
+      "description": "Jellyfin plugin that creates self-updating libraries, searches public indexers server-side, and resolves already-cached TorBox playback through Jellyfin.",
+      "architecture": "media_server_plugin",
+      "dependency": "plugin_for_jellyfin",
+      "aiostreams": {
+        "state": "unconfirmed",
+        "note": "No current first-party AIOStreams integration was confirmed during this survey.",
+        "evidence": []
+      },
+      "stremio_protocol": "unknown",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [
+          "TorBox"
+        ],
+        "usenet": "unknown",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "Playback uses Jellyfin's normal client pipeline; Apple TV coverage was not separately verified for this record.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "Playback uses Jellyfin's normal client pipeline; Android TV coverage was not separately verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "The plugin integrates into Jellyfin, but browser playback coverage was not separately verified for this record.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes Nebula Bridge as a Jellyfin plugin that creates dynamic libraries, searches indexers natively, and resolves already-cached TorBox Debrid streams through Jellyfin.",
+          "url": "https://github.com/AmbientFlare/Nebula-Bridge/blob/main/README.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        }
+      ],
+      "verified_at": "2026-08-31"
+    },
+    {
+      "id": "jf-resolve",
+      "name": "JF Resolve",
+      "repository": "vicking20/jf-resolve",
+      "description": "Jellyfin bridge that builds virtual STRM libraries and resolves generic Stremio-addon streams through Real-Debrid or AllDebrid at playback time.",
+      "architecture": "bridge",
+      "dependency": "requires_jellyfin",
+      "aiostreams": {
+        "state": "unconfirmed",
+        "note": "The project accepts generic Stremio addon manifests, but no first-party evidence was verified that specifically establishes AIOStreams compatibility.",
+        "evidence": []
+      },
+      "stremio_protocol": "yes",
+      "sources": {
+        "debrid": "yes",
+        "debrid_providers": [
+          "Real-Debrid",
+          "AllDebrid"
+        ],
+        "usenet": "unknown",
+        "local_media": "unknown"
+      },
+      "api": {
+        "jellyfin_compatible": "unknown"
+      },
+      "clients": {
+        "apple_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to Jellyfin clients; Apple TV coverage was not separately verified for this record.",
+          "evidence": []
+        },
+        "android_tv": {
+          "state": "unconfirmed",
+          "note": "Playback is delegated to Jellyfin clients; Android TV coverage was not separately verified for this record.",
+          "evidence": []
+        },
+        "web": {
+          "state": "unconfirmed",
+          "note": "The service provides web endpoints and a virtual Jellyfin library, but browser playback was not separately verified for this record.",
+          "evidence": []
+        }
+      },
+      "evidence": [
+        {
+          "claim": "The README describes a Jellyfin bridge that creates virtual STRM libraries, consumes configurable Stremio addon manifests, and resolves playback through Real-Debrid or AllDebrid.",
+          "url": "https://github.com/vicking20/jf-resolve/blob/main/Readme.md",
+          "source_type": "readme",
+          "checked_at": "2026-08-31"
+        }
+      ],
+      "verified_at": "2026-08-31"
     }
   ]
 }
