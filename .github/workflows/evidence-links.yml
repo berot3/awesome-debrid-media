@@ -1,0 +1,33 @@
+name: Evidence link health
+
+on:
+  schedule:
+    - cron: '41 6 * * 3'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Generate advisory evidence-link report
+        run: |
+          python3 scripts/check_evidence_links.py | tee evidence-link-report.txt
+          {
+            echo '## Evidence link health report'
+            echo
+            echo '```text'
+            cat evidence-link-report.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
