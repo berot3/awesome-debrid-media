@@ -79,7 +79,7 @@
           "checked_at": "2026-08-30"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "remux",
@@ -125,7 +125,7 @@
               "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
               "url": "https://firecore.com/infuse",
               "source_type": "official_docs",
-              "checked_at": "2026-08-28"
+              "checked_at": "2026-09-01"
             }
           ]
         },
@@ -154,7 +154,7 @@
           "checked_at": "2026-08-30"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "fetcherr",
@@ -171,7 +171,7 @@
             "claim": "The official README requires a playable Stremio add-on and names AIOStreams, then documents AIOStreams-specific setup and playback behavior.",
             "url": "https://github.com/goneturbo/fetcherr/blob/main/README.md",
             "source_type": "readme",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -197,13 +197,13 @@
               "claim": "The official README describes Fetcherr as a Jellyfin-compatible streaming bridge for Infuse and documents connecting Infuse.",
               "url": "https://github.com/goneturbo/fetcherr/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             },
             {
               "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
               "url": "https://firecore.com/infuse",
               "source_type": "official_docs",
-              "checked_at": "2026-08-28"
+              "checked_at": "2026-09-01"
             }
           ]
         },
@@ -223,16 +223,16 @@
           "claim": "The README describes Jellyfin-compatible search/playback, Real-Debrid or TorBox resolution, and Infuse/VidHub client paths.",
           "url": "https://github.com/goneturbo/fetcherr/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The README explicitly documents AIOStreams configured with EasyNews returning direct playable URLs that Fetcherr can unwrap and play, establishing a Usenet-backed playback path.",
           "url": "https://github.com/goneturbo/fetcherr/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "hound",
@@ -310,7 +310,7 @@
           "checked_at": "2026-08-30"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "riven-rs",
@@ -327,13 +327,13 @@
             "claim": "The official plugin documentation describes an AIOStreams scraper that queries a configured AIOStreams instance.",
             "url": "https://github.com/olivertgwalton/riven-rs/blob/main/docs/plugins/aiostreams.md",
             "source_type": "official_docs",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           },
           {
             "claim": "The Riven RS README lists AIOStreams among built-in torrent scraper plugins.",
             "url": "https://github.com/olivertgwalton/riven-rs/blob/main/README.md",
             "source_type": "readme",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -379,22 +379,22 @@
           "claim": "The README describes FUSE output for Jellyfin, Emby, Plex, or other media servers and built-in plugins for Debrid and Usenet.",
           "url": "https://github.com/olivertgwalton/riven-rs/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The StremThru plugin exposes API-key settings for Real-Debrid, AllDebrid, Debrider, Debrid-Link, EasyDebrid, Offcloud, PikPak, Premiumize, and TorBox.",
           "url": "https://github.com/olivertgwalton/riven-rs/blob/main/docs/plugins/stremthru.md",
           "source_type": "official_docs",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The built-in Usenet plugin directly streams NZB content from configured NNTP providers through the VFS without staging the full download locally.",
           "url": "https://github.com/olivertgwalton/riven-rs/blob/main/docs/plugins/usenet.md",
           "source_type": "official_docs",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "riven-ts",
@@ -412,13 +412,13 @@
             "claim": "Current official Riven TS documentation describes Torrentio or Comet as scraper choices and StremThru as the Debrid layer.",
             "url": "https://github.com/rivenmedia/riven-ts/blob/main/apps/wiki/content/docs/index.mdx",
             "source_type": "official_docs",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           },
           {
             "claim": "The current packages tree contains dedicated Comet, Torrentio and StremThru plugins but no AIOStreams plugin package; this supports an unconfirmed state, not a negative support claim.",
             "url": "https://github.com/rivenmedia/riven-ts/tree/main/packages",
             "source_type": "source_code",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -458,10 +458,10 @@
           "claim": "Official Riven TS documentation describes the pipeline as Torrentio/Comet to StremThru/Debrid to FUSE VFS to Plex or Jellyfin.",
           "url": "https://github.com/rivenmedia/riven-ts/blob/main/apps/wiki/content/docs/index.mdx",
           "source_type": "official_docs",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "silo",
@@ -544,7 +544,7 @@
           "checked_at": "2026-08-30"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "jellyio-streams",
@@ -561,7 +561,7 @@
             "claim": "The README describes Jellyio Streams as a Jellyfin plugin for streaming from a self-hosted AIOStreams instance and documents AIOStreams-specific setup.",
             "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
             "source_type": "readme",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -584,13 +584,13 @@
               "claim": "The Jellyio Streams README says added items behave like normal Jellyfin library items and playback works on every Jellyfin client.",
               "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             },
             {
               "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
               "url": "https://firecore.com/infuse",
               "source_type": "official_docs",
-              "checked_at": "2026-08-28"
+              "checked_at": "2026-09-01"
             }
           ]
         },
@@ -602,7 +602,7 @@
               "claim": "The README says playback works on every Jellyfin client.",
               "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             }
           ]
         },
@@ -614,7 +614,7 @@
               "claim": "The README documents a Jellyfin dashboard search page and normal Jellyfin library playback.",
               "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             }
           ]
         }
@@ -624,10 +624,10 @@
           "claim": "The README documents signed .strm tokens that trigger fresh AIOStreams resolution and redirect/proxy behavior at playback.",
           "url": "https://github.com/wrvines/jellyio-streams/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "gelato",
@@ -644,7 +644,7 @@
             "claim": "The official README instructs users to set up an AIOStreams manifest and explicitly states that only AIOStreams is supported.",
             "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
             "source_type": "readme",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -667,20 +667,33 @@
               "claim": "The Gelato README says Stremio items behave like native Jellyfin items and streams play through Jellyfin.",
               "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             },
             {
               "claim": "Firecore documents Infuse support for Apple TV/tvOS.",
               "url": "https://firecore.com/infuse",
               "source_type": "official_docs",
-              "checked_at": "2026-08-28"
+              "checked_at": "2026-09-01"
             }
           ]
         },
         "android_tv": {
-          "state": "unconfirmed",
-          "note": "Playback is delegated to Jellyfin clients; Android TV coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Gelato injects Stremio items as native Jellyfin items and streams them through Jellyfin; Jellyfin provides an official Android TV client.",
+          "evidence": [
+            {
+              "claim": "The Gelato README says Stremio items behave like native Jellyfin items and streams are played and proxied through Jellyfin.",
+              "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists an official Jellyfin client for Android TV and Fire TV.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "web": {
           "state": "compatible_third_party",
@@ -690,7 +703,7 @@
               "claim": "The README describes Gelato as a Jellyfin plugin that replaces Jellyfin search and integrates Stremio items into Jellyfin's database.",
               "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             }
           ]
         }
@@ -700,10 +713,10 @@
           "claim": "The README describes realtime stream resolution, Jellyfin database integration, and proxying through Jellyfin.",
           "url": "https://github.com/lostb1t/Gelato/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "cineflow",
@@ -720,7 +733,7 @@
             "claim": "The current AIOStreams scraper authenticates to /api/v1/search, requests infoHash results, and returns those hashes as torrent candidates for CineFlow's normal pipeline.",
             "url": "https://github.com/S0lidByte/CineFlow/blob/main/src/program/services/scrapers/aiostreams.py",
             "source_type": "source_code",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -759,10 +772,10 @@
           "claim": "The README describes CineFlow as a self-hosted media automation platform using Debrid providers, scrapers, a VFS, and Plex/Jellyfin/Emby media servers.",
           "url": "https://github.com/S0lidByte/CineFlow/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "jellygrail",
@@ -792,9 +805,22 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "JellyGrail exposes Jellyfin/WebDAV/Kodi/Plex paths, but an Apple TV-specific path was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "JellyGrail bundles Jellyfin with zero-click setup; the official Swiftfin Jellyfin client is currently available for Apple TV.",
+          "evidence": [
+            {
+              "claim": "The JellyGrail README says Jellyfin is included with zero-click setup and is a supported player path.",
+              "url": "https://github.com/philamp/jellygrail/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Apple's current App Store listing identifies Swiftfin as an official Jellyfin companion available on Apple TV.",
+              "url": "https://apps.apple.com/us/app/swiftfin/id1604098728",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
           "state": "unconfirmed",
@@ -809,7 +835,7 @@
               "claim": "The official README says Jellyfin is included with zero-click setup and is one of the supported player paths.",
               "url": "https://github.com/philamp/jellygrail/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             }
           ]
         }
@@ -819,16 +845,16 @@
           "claim": "The README describes JellyGrail as an enhanced Jellyfin image bridging local, cloud and Debrid sources through JGFS, with Jellyfin included and external Kodi/Plex paths.",
           "url": "https://github.com/philamp/jellygrail/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The README lists native Debrid support for Real-Debrid, Premiumize and TorBox and documents local mount sources.",
           "url": "https://github.com/philamp/jellygrail/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "robofuse",
@@ -856,9 +882,22 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "The README names Infuse as a target, but a tvOS-specific compatibility statement was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "RoboFuse explicitly generates STRM libraries for Infuse; Infuse is currently available on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "The RoboFuse README explicitly says its STRM files are generated for players including Infuse.",
+              "url": "https://github.com/itsrenoria/robofuse/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists Infuse as a third-party Jellyfin client for tvOS.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
           "state": "unconfirmed",
@@ -876,10 +915,10 @@
           "claim": "The official README describes RoboFuse as a Real-Debrid STRM generator with library repair for Infuse, Jellyfin, and Emby.",
           "url": "https://github.com/itsrenoria/robofuse/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "jfresolve",
@@ -896,7 +935,7 @@
             "claim": "The README's installation instructions say the plugin was tested with Torrentio, TorrentioRD, AIOStreams, and MediaFusion.",
             "url": "https://github.com/vicking20/jfresolve/blob/main/README.md",
             "source_type": "readme",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -914,14 +953,40 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "Playback is delegated to Jellyfin clients; Apple TV coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Jfresolve discovers and streams external items through Jellyfin’s normal playback path; Infuse provides a current Jellyfin client path on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "The Jfresolve README documents discovery inside Jellyfin and external-stream playback proxied through Jellyfin.",
+              "url": "https://github.com/vicking20/jfresolve/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists Infuse as a third-party Jellyfin client for tvOS.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
-          "state": "unconfirmed",
-          "note": "Playback is delegated to Jellyfin clients; Android TV coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Jfresolve discovers and streams external items through Jellyfin’s normal playback path; Jellyfin provides an official Android TV client.",
+          "evidence": [
+            {
+              "claim": "The Jfresolve README documents discovery inside Jellyfin and external-stream playback proxied through Jellyfin.",
+              "url": "https://github.com/vicking20/jfresolve/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists an official Jellyfin client for Android TV and Fire TV.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "web": {
           "state": "compatible_third_party",
@@ -931,7 +996,7 @@
               "claim": "The README says external search results are discovered directly through the Jellyfin UI and the plugin streams external sources through Jellyfin.",
               "url": "https://github.com/vicking20/jfresolve/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             }
           ]
         }
@@ -941,23 +1006,23 @@
           "claim": "The README describes a Jellyfin plugin that consumes Stremio addon manifests from a Debrid provider and streams external media on demand.",
           "url": "https://github.com/vicking20/jfresolve/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The current version section labels the Jellyfin 10.11+ line 'Not Actively Maintained'.",
           "url": "https://github.com/vicking20/jfresolve/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "mycelium",
       "name": "Mycelium",
       "repository": "corveck79/mycelium",
-      "description": "On-demand Debrid streaming backend that turns requests into Jellyfin/Emby/Kodi/Plex/Infuse-ready STRM entries and proxies TorBox or Real-Debrid streams with no full local media storage.",
-      "architecture": "streaming_backend",
+      "description": "Self-hosted Debrid media-server experience with built-in discovery, library and browser playback, plus STRM/WebDAV paths for external clients, proxying TorBox or Real-Debrid streams without full local media storage.",
+      "architecture": "full_media_server",
       "dependency": "independent",
       "aiostreams": {
         "state": "unconfirmed",
@@ -979,9 +1044,22 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "The README documents Infuse via WebDAV, but an Apple TV/tvOS-specific statement was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Mycelium documents Infuse as a supported WebDAV consumer; Infuse officially supports WebDAV playback on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "The Mycelium README documents Infuse via WebDAV as a supported consumer path.",
+              "url": "https://github.com/corveck79/mycelium/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Official Firecore documentation confirms SMB and WebDAV video playback in Infuse and documents network-share setup on Apple TV.",
+              "url": "https://support.firecore.com/hc/en-us/articles/215090977-Streaming-From-a-Mac-PC-or-NAS",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
           "state": "unconfirmed",
@@ -996,7 +1074,7 @@
               "claim": "The official README documents Mycelium's own Discover SPA and browser web-player path.",
               "url": "https://github.com/corveck79/mycelium/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             }
           ]
         }
@@ -1006,10 +1084,10 @@
           "claim": "The README describes TorBox and Real-Debrid request-to-stream pipelines, STRM generation/proxying, and Jellyfin/Emby/Kodi/Plex/Infuse outputs.",
           "url": "https://github.com/corveck79/mycelium/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "seanime",
@@ -1071,7 +1149,7 @@
           "checked_at": "2026-08-30"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "debrid-movie-mapper",
@@ -1107,7 +1185,7 @@
               "claim": "The DebridMovieMapper README explicitly lists Infuse (iOS/tvOS/macOS) among supported consumers.",
               "url": "https://github.com/phrontizo/DebridMovieMapper/blob/main/README.md",
               "source_type": "readme",
-              "checked_at": "2026-08-30"
+              "checked_at": "2026-09-01"
             }
           ]
         },
@@ -1127,10 +1205,10 @@
           "claim": "The README describes Real-Debrid/TorBox WebDAV presentation, TMDB organization, lazy CDN reads, and Jellyfin/Plex/Kodi/Infuse usage.",
           "url": "https://github.com/phrontizo/DebridMovieMapper/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "vibe-debrid",
@@ -1158,9 +1236,22 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "Playback is delegated to the downstream media-server/client stack; no Apple TV path was separately verified.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "vibeDebrid documents Infuse playback through its Samba-exposed symlink library; Infuse officially supports SMB playback on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "The vibeDebrid README documents an Infuse-over-Samba path for its generated symlink library.",
+              "url": "https://github.com/vibeMonarch/vibeDebrid/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Official Firecore documentation confirms SMB and WebDAV video playback in Infuse and documents network-share setup on Apple TV.",
+              "url": "https://support.firecore.com/hc/en-us/articles/215090977-Streaming-From-a-Mac-PC-or-NAS",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
           "state": "unconfirmed",
@@ -1178,10 +1269,10 @@
           "claim": "The README describes the pipeline as Torrentio/Zilean scraping to Real-Debrid, Zurg/rclone mounting, symlink creation, and Plex/Jellyfin library integration.",
           "url": "https://github.com/vibeMonarch/vibeDebrid/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "zurg",
@@ -1209,9 +1300,22 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "The README names Infuse as a direct WebDAV consumer, but a tvOS-specific statement was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Zurg explicitly documents Infuse as a direct WebDAV consumer; Infuse officially supports WebDAV playback on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "The Zurg public README identifies Infuse as a direct consumer of Zurg's WebDAV server.",
+              "url": "https://github.com/debridmediamanager/zurg-public/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Official Firecore documentation confirms SMB and WebDAV video playback in Infuse and documents network-share setup on Apple TV.",
+              "url": "https://support.firecore.com/hc/en-us/articles/215090977-Streaming-From-a-Mac-PC-or-NAS",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
           "state": "unconfirmed",
@@ -1229,16 +1333,16 @@
           "claim": "The official public README describes Zurg as a self-hosted Real-Debrid WebDAV server for Infuse and rclone-mounted media-server libraries, with on-demand repair.",
           "url": "https://github.com/debridmediamanager/zurg-public/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The README identifies v1.0.0 as the documented public stable release and separately describes sponsor-only nightlies with additional backends; those gated nightly capabilities are not promoted into this stable record.",
           "url": "https://github.com/debridmediamanager/zurg-public/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "altmount",
@@ -1255,7 +1359,7 @@
             "claim": "AltMount's official Stremio documentation includes an explicit 'AIOStreams / proxy example' for handing an NZB and Stremio episode id to AltMount.",
             "url": "https://github.com/javi11/altmount/blob/main/docs/docs/3.%20Configuration/stremio.md",
             "source_type": "official_docs",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -1291,16 +1395,16 @@
           "claim": "The README describes AltMount as a WebDAV server backed by NZB/Usenet.",
           "url": "https://github.com/javi11/altmount/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The first-party Stremio documentation describes a built-in addon that searches Prowlarr and returns Usenet stream URLs, plus a manual NZB-to-stream API.",
           "url": "https://github.com/javi11/altmount/blob/main/docs/docs/3.%20Configuration/stremio.md",
           "source_type": "official_docs",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "nzbdav",
@@ -1317,7 +1421,7 @@
             "claim": "The official setup guide documents Stremio via AIOStreams: AIOStreams searches Newznab, sends the NZB to NzbDAV, and exposes a streamable URL.",
             "url": "https://github.com/nzbdav-dev/nzbdav/blob/main/docs/setup-guide.md",
             "source_type": "official_docs",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -1353,16 +1457,16 @@
           "claim": "The README describes seekable NZB/Usenet WebDAV streaming, a SABnzbd-compatible API, and Plex/Jellyfin integration without full local downloads.",
           "url": "https://github.com/nzbdav-dev/nzbdav/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The setup guide separately documents Arr/media-server and AIOStreams on-demand flows.",
           "url": "https://github.com/nzbdav-dev/nzbdav/blob/main/docs/setup-guide.md",
           "source_type": "official_docs",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "infinidysk",
@@ -1380,7 +1484,7 @@
             "claim": "The official README's integration documentation explicitly lists Stremio through AIOStreams.",
             "url": "https://github.com/infinidysk/infinidysk/blob/main/README.md",
             "source_type": "readme",
-            "checked_at": "2026-08-30"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -1416,16 +1520,16 @@
           "claim": "The README describes InfiniDysk as a Usenet WebDAV/SAB backend that streams NZBs without downloading full media first and integrates with Plex, Emby, Jellyfin and other WebDAV consumers.",
           "url": "https://github.com/infinidysk/infinidysk/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The README describes InfiniDysk as a maintained fork/drop-in upgrade from NzbDAV while documenting the two projects' migration relationship.",
           "url": "https://github.com/infinidysk/infinidysk/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "davdebrid",
@@ -1473,10 +1577,10 @@
           "claim": "The current first-party README describes DavDebrid as a self-hosted WebDAV server for Debrid-Link with automatic media organization and Plex/rclone integration.",
           "url": "https://github.com/arvida42/davdebrid/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "stremthru",
@@ -1533,22 +1637,22 @@
           "claim": "The README describes StremThru as a Stremio companion with HTTP(S) proxying, byte serving, store-content proxying, and integrations for the listed Debrid/cloud stores.",
           "url": "https://github.com/MunifTanjim/stremthru/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "First-party documentation says StremThru includes six built-in Stremio addons, including Store, Torz and Newz.",
           "url": "https://github.com/MunifTanjim/stremthru/blob/main/docs/stremio-addons/index.md",
           "source_type": "official_docs",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The built-in StremThru Newz addon explicitly documents Usenet integration and NNTP streaming.",
           "url": "https://github.com/MunifTanjim/stremthru/blob/main/docs/stremio-addons/newz.md",
           "source_type": "official_docs",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "warpbox",
@@ -1576,9 +1680,22 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "The project documents Infuse setup through its media-server guide, but a tvOS-specific statement was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Warpbox’s first-party setup guide documents direct WebDAV access from Infuse on Apple TV; Infuse officially supports WebDAV playback on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "Warpbox's first-party media-server guide documents direct WebDAV setup in Infuse on Apple TV.",
+              "url": "https://github.com/mainlink0435/warpbox/blob/main/docs/media-servers.md",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Official Firecore documentation confirms SMB and WebDAV video playback in Infuse and documents network-share setup on Apple TV.",
+              "url": "https://support.firecore.com/hc/en-us/articles/215090977-Streaming-From-a-Mac-PC-or-NAS",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
           "state": "unconfirmed",
@@ -1596,16 +1713,16 @@
           "claim": "The README describes Warpbox as a TorBox WebDAV proxy that caches metadata/CDN links, rate-limits TorBox API access, and sits between rclone/media servers and TorBox.",
           "url": "https://github.com/mainlink0435/warpbox/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The README points to first-party setup documentation for Plex, Jellyfin, Emby and Infuse consumers.",
           "url": "https://github.com/mainlink0435/warpbox/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-30"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-30"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "aio-jellyfin-wrapper",
@@ -1661,7 +1778,7 @@
           "checked_at": "2026-08-31"
         }
       ],
-      "verified_at": "2026-08-31"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "wisp",
@@ -1678,7 +1795,7 @@
             "claim": "The README describes Wisp as a standalone request-to-playback engine for AIOStreams and documents the AIOStreams search/resolution flow.",
             "url": "https://github.com/drondeseries/wisp/blob/main/README.md",
             "source_type": "readme",
-            "checked_at": "2026-08-31"
+            "checked_at": "2026-09-01"
           }
         ]
       },
@@ -1714,10 +1831,10 @@
           "claim": "The README describes a media-server-to-Wisp VFS flow that resolves AIOStreams results and explicitly carries Debrid and Usenet playback through the backend.",
           "url": "https://github.com/drondeseries/wisp/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-31"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-31"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "decypharr",
@@ -1769,16 +1886,16 @@
           "claim": "The canonical README describes Decypharr as a media gateway for Debrid services and Usenet, with qBittorrent/SABnzbd-compatible APIs, direct NNTP streaming, and NFS/SMB library presentation.",
           "url": "https://github.com/sirrobot01/decypharr/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-31"
+          "checked_at": "2026-09-01"
         },
         {
           "claim": "The README lists Real-Debrid, TorBox, Debrid-Link, AllDebrid, and Premiumize among supported Debrid providers.",
           "url": "https://github.com/sirrobot01/decypharr/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-31"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-31"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "mosaic",
@@ -1840,7 +1957,7 @@
           "checked_at": "2026-08-31"
         }
       ],
-      "verified_at": "2026-08-31"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "nebula-bridge",
@@ -1868,19 +1985,58 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "Playback uses Jellyfin's normal client pipeline; Apple TV coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Nebula Bridge explicitly plays resolved streams through Jellyfin’s normal pipeline; Infuse provides a current Jellyfin client path on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "The Nebula Bridge README explicitly says resolved streams play through Jellyfin's normal pipeline.",
+              "url": "https://github.com/AmbientFlare/Nebula-Bridge/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists Infuse as a third-party Jellyfin client for tvOS.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
-          "state": "unconfirmed",
-          "note": "Playback uses Jellyfin's normal client pipeline; Android TV coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Nebula Bridge explicitly plays resolved streams through Jellyfin’s normal pipeline; Jellyfin provides an official Android TV client.",
+          "evidence": [
+            {
+              "claim": "The Nebula Bridge README explicitly says resolved streams play through Jellyfin's normal pipeline.",
+              "url": "https://github.com/AmbientFlare/Nebula-Bridge/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists an official Jellyfin client for Android TV and Fire TV.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "web": {
-          "state": "unconfirmed",
-          "note": "The plugin integrates into Jellyfin, but browser playback coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "Nebula Bridge explicitly plays resolved streams through Jellyfin’s normal pipeline; browser playback is available through Jellyfin’s bundled web client.",
+          "evidence": [
+            {
+              "claim": "The Nebula Bridge README explicitly says resolved streams play through Jellyfin's normal pipeline.",
+              "url": "https://github.com/AmbientFlare/Nebula-Bridge/blob/main/README.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Official Jellyfin networking documentation says Jellyfin ships with a web client for browser playback.",
+              "url": "https://jellyfin.org/docs/general/post-install/networking/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         }
       },
       "evidence": [
@@ -1888,10 +2044,10 @@
           "claim": "The README describes Nebula Bridge as a Jellyfin plugin that creates dynamic libraries, searches indexers natively, and resolves already-cached TorBox Debrid streams through Jellyfin.",
           "url": "https://github.com/AmbientFlare/Nebula-Bridge/blob/main/README.md",
           "source_type": "readme",
-          "checked_at": "2026-08-31"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-31"
+      "verified_at": "2026-09-01"
     },
     {
       "id": "jf-resolve",
@@ -1920,19 +2076,58 @@
       },
       "clients": {
         "apple_tv": {
-          "state": "unconfirmed",
-          "note": "Playback is delegated to Jellyfin clients; Apple TV coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "JF Resolve creates Jellyfin STRM items whose resolver returns playable streams; Infuse provides a current Jellyfin client path on Apple TV/tvOS.",
+          "evidence": [
+            {
+              "claim": "The JF Resolve README documents generating Jellyfin STRM items, scanning them into Jellyfin, and starting playback through its stream resolver.",
+              "url": "https://github.com/vicking20/jf-resolve/blob/main/Readme.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists Infuse as a third-party Jellyfin client for tvOS.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "android_tv": {
-          "state": "unconfirmed",
-          "note": "Playback is delegated to Jellyfin clients; Android TV coverage was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "JF Resolve creates Jellyfin STRM items whose resolver returns playable streams; Jellyfin provides an official Android TV client.",
+          "evidence": [
+            {
+              "claim": "The JF Resolve README documents generating Jellyfin STRM items, scanning them into Jellyfin, and starting playback through its stream resolver.",
+              "url": "https://github.com/vicking20/jf-resolve/blob/main/Readme.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Jellyfin's current client directory lists an official Jellyfin client for Android TV and Fire TV.",
+              "url": "https://jellyfin.org/downloads/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         },
         "web": {
-          "state": "unconfirmed",
-          "note": "The service provides web endpoints and a virtual Jellyfin library, but browser playback was not separately verified for this record.",
-          "evidence": []
+          "state": "compatible_third_party",
+          "note": "JF Resolve creates Jellyfin STRM items whose resolver returns playable streams; browser playback is available through Jellyfin’s bundled web client, not JF Resolve’s management UI.",
+          "evidence": [
+            {
+              "claim": "The JF Resolve README documents generating Jellyfin STRM items, scanning them into Jellyfin, and starting playback through its stream resolver.",
+              "url": "https://github.com/vicking20/jf-resolve/blob/main/Readme.md",
+              "source_type": "readme",
+              "checked_at": "2026-09-01"
+            },
+            {
+              "claim": "Official Jellyfin networking documentation says Jellyfin ships with a web client for browser playback.",
+              "url": "https://jellyfin.org/docs/general/post-install/networking/",
+              "source_type": "official_docs",
+              "checked_at": "2026-09-01"
+            }
+          ]
         }
       },
       "evidence": [
@@ -1940,10 +2135,10 @@
           "claim": "The README describes a Jellyfin bridge that creates virtual STRM libraries, consumes configurable Stremio addon manifests, and resolves playback through Real-Debrid or AllDebrid.",
           "url": "https://github.com/vicking20/jf-resolve/blob/main/Readme.md",
           "source_type": "readme",
-          "checked_at": "2026-08-31"
+          "checked_at": "2026-09-01"
         }
       ],
-      "verified_at": "2026-08-31"
+      "verified_at": "2026-09-01"
     }
   ]
 }
