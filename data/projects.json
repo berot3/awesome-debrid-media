@@ -1784,15 +1784,15 @@
       "id": "mosaic",
       "name": "Mosaic",
       "repository": "mosaic-media/platform",
-      "description": "Modular local-first home media platform with its own playback origin and extension system, including a dedicated first-party AIOStreams stream provider.",
+      "description": "Modular local-first home media platform with its own playback origin and extension system; AIOStreams integration is available through a separate optional first-party module.",
       "architecture": "full_media_server",
       "dependency": "independent",
       "aiostreams": {
-        "state": "explicit",
-        "note": "Mosaic has a dedicated first-party AIOStreams extension module that supplies streams and subtitles from a configured AIOStreams instance.",
+        "state": "plugin_or_bridge",
+        "note": "AIOStreams integration is not intrinsic to Mosaic core; the separate optional first-party module-aiostreams module supplies streams and subtitles from a configured AIOStreams instance.",
         "evidence": [
           {
-            "claim": "The first-party AIOStreams module README describes it as a dedicated Mosaic stream provider sourcing from AIOStreams.",
+            "claim": "The separate first-party module-aiostreams README describes it as an optional Mosaic module and dedicated stream provider sourcing from AIOStreams.",
             "url": "https://github.com/mosaic-media/module-aiostreams/blob/main/README.md",
             "source_type": "readme",
             "checked_at": "2026-08-31"
