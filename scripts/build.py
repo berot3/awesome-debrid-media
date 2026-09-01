@@ -39,6 +39,15 @@ ARCHITECTURE_LABELS = {
     "media_server_plugin": "Media-server plugin",
     "other": "Other",
 }
+ARCHITECTURE_EXPLANATIONS = {
+    "full_media_server": "A self-hosted system that normally provides the main media-server experience itself, including library/discovery and playback-serving responsibilities. Its role is broader than only resolving streams or extending another server. The label alone does not tell you which clients, sources, or integrations it supports.",
+    "streaming_backend": "A server-side system focused mainly on discovering, resolving, and/or serving streams, often for another client or media workflow. It does not necessarily provide a traditional library-centric media-server experience. The label alone does not tell you which clients, providers, protocols, or stream sources it supports.",
+    "jellyfin_compatible_server": "An independent server or backend designed to expose enough Jellyfin-compatible API behavior for Jellyfin-ecosystem clients. It does not require Jellyfin itself to be the primary server, and it is not necessarily a traditional full media server. The label does not guarantee compatibility with every Jellyfin client, API feature, or workflow.",
+    "bridge": "A server-side compatibility layer that translates or exposes one ecosystem through another API or client path. It usually does not provide the main media-server experience itself; its primary role is connecting otherwise different systems. The label alone does not tell you which clients, protocols, or stream sources are actually supported.",
+    "media_automation_vfs": "A system centered on media acquisition or automation and presenting content through a virtual filesystem or similar library layer to another media server. It normally does not replace that host server’s main library and playback experience. The label alone does not tell you which host servers, providers, or clients it supports.",
+    "media_server_plugin": "A plugin that extends an existing media server and cannot act as the primary server by itself. Its role is to add capabilities inside its host rather than provide an independent media-server experience. The label alone does not tell you which hosts, clients, or source integrations it supports.",
+    "other": "Relevant server-side architecture that does not fit the classes above. Whether it provides the main media-server experience depends on the specific project, so read the project description and dependency information. The label itself should not be used to infer compatibility or capabilities.",
+}
 CLIENT_LABELS = {
     "released_first_party": "✅ First-party release",
     "source_only_first_party": "🧪 First-party source only",
@@ -145,6 +154,18 @@ def apple_guide_html() -> str:
             "<div>"
             f"<dt>{esc(label)}</dt>"
             f"<dd>{esc(CLIENT_EXPLANATIONS[state])}</dd>"
+            "</div>"
+        )
+    return "".join(items)
+
+
+def architecture_guide_html() -> str:
+    items = []
+    for state, label in ARCHITECTURE_LABELS.items():
+        items.append(
+            "<div>"
+            f"<dt>{esc(label)}</dt>"
+            f"<dd>{esc(ARCHITECTURE_EXPLANATIONS[state])}</dd>"
             "</div>"
         )
     return "".join(items)
@@ -290,6 +311,7 @@ def main() -> int:
     desktop_details = "\n".join(project_detail(project) for project in projects)
     aio_guide = aio_guide_html()
     apple_guide = apple_guide_html()
+    architecture_guide = architecture_guide_html()
     architecture_filter = architecture_filter_html()
 
     document = f"""<!doctype html>
@@ -439,6 +461,11 @@ def main() -> int:
 
     <details class="comparison-guide">
       <summary>How to read this comparison</summary>
+      <p><strong>Architecture: what role does the server play?</strong> Architecture describes the project’s server-side role. Dependency — shown in the comparison as the backend model/dependency filter — separately describes whether its intended function can run independently or requires Jellyfin, Plex, Emby, or another host media server. Read these as separate fields.</p>
+      <dl class="status-key">
+{architecture_guide}
+      </dl>
+      <p><strong>What architecture does not tell you.</strong> Architecture alone does not establish client compatibility, AIOStreams support, Debrid or Usenet support, the separate per-project Jellyfin API compatibility result, quality, maturity, ranking, or recommendation. Use the dedicated comparison fields and project evidence for those questions.</p>
       <p><strong>Why AIOStreams?</strong> AIOStreams is a primary comparison dimension because these server-side projects can use it as a stream-source integration point. The path matters: direct support, generic Stremio-protocol compatibility, and plugin/bridge integrations are useful but not equivalent.</p>
       <dl class="status-key">
 {aio_guide}
