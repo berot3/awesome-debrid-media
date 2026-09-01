@@ -94,6 +94,20 @@ Do not:
 - add analytics, tracking, advertising, or accounts to the static site;
 - add a heavy frontend framework without a demonstrated need.
 
+## Agent handoffs and task scope
+
+Repository and GitHub state are canonical for agent work.
+
+- Do not depend on previous chat or session history when the relevant state can be read from the repository, the active GitHub Issue, Issue/PR comments, branches, commits, or pull requests.
+- A later agent should be able to continue from `AGENTS.md`, the active Issue, relevant durable Issue/PR comments, and current repository state.
+- Use GitHub Issue or PR comments for issue-specific decision logs, audit results, and implementation handoffs when later agents need them. Do not create permanent repository spec files solely to preserve temporary orchestration state.
+- Follow the active Issue and assigned phase strictly. Do not opportunistically implement adjacent Issues.
+- If a task or phase is explicitly read-only, perform no repository or GitHub writes.
+- If a task defines a completion gate or instructs the agent to stop after a phase, stop there.
+- Reuse an existing task branch or pull request when it remains valid rather than creating competing replacements without a concrete reason.
+- Treat reported branch heads, CI results, merge state, and Issue closure as claims to verify against GitHub before relying on them.
+- After implementation, review the complete diff against the current base branch and ensure unrelated cleanup has not entered the task.
+
 ## Review principle
 
 When uncertain, preserve uncertainty in the data. `unconfirmed` is preferable to a confident but unsupported yes/no claim.
