@@ -98,6 +98,8 @@ Do not:
 
 Repository and GitHub state are canonical for agent work.
 
+Role-specific additions are documented in [`docs/agents/orchestrator.md`](docs/agents/orchestrator.md) for maintainer orchestration and [`docs/agents/worker.md`](docs/agents/worker.md) for worker execution. Neither document overrides this repository-wide instruction set.
+
 - Do not depend on previous chat or session history when the relevant state can be read from the repository, the active GitHub Issue, Issue/PR comments, branches, commits, or pull requests.
 - A later agent should be able to continue from `AGENTS.md`, the active Issue, relevant durable Issue/PR comments, and current repository state.
 - Use GitHub Issue or PR comments for issue-specific decision logs, audit results, and implementation handoffs when later agents need them. Do not create permanent repository spec files solely to preserve temporary orchestration state.
