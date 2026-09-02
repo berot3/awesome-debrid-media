@@ -118,9 +118,12 @@ def evidence_html(project: dict) -> str:
         seen.add(key)
         items.append(
             "<li>"
-            f"{esc(entry['claim'])} "
-            f"<a href=\"{esc(entry['url'])}\">source</a> "
-            f"<span class=\"evidence-type\">{esc(entry['source_type'].replace('_', ' '))}</span>"
+            f"<span class=\"evidence-claim\">{esc(entry['claim'])}</span>"
+            "<span class=\"evidence-meta\">"
+            f"<a href=\"{esc(entry['url'])}\">Source</a>"
+            f"<span><strong>Type:</strong> {esc(entry['source_type'].replace('_', ' '))}</span>"
+            f"<span><strong>Checked:</strong> {esc(entry['checked_at'])}</span>"
+            "</span>"
             "</li>"
         )
     return f"<ul class=\"evidence-list\">{''.join(items)}</ul>"
@@ -131,6 +134,8 @@ def project_details_html(project: dict) -> str:
     return (
         f"<p><strong>AIOStreams:</strong> {esc(project['aiostreams']['note'])}</p>"
         f"<p><strong>Apple TV path:</strong> {esc(CLIENT_LABELS[apple_state])} — {esc(project['clients']['apple_tv']['note'])}</p>"
+        f"<p class=\"evidence-date-note\">Evidence dates show when each cited source and claim was checked. "
+        f"Project record verified: {esc(project['verified_at'])}.</p>"
         f"{evidence_html(project)}"
     )
 
@@ -398,8 +403,11 @@ def main() -> int:
     summary {{ cursor: pointer; font-weight: 650; }}
     .comparison-guide {{ border-top: 1px solid var(--border); margin-top: 0; padding-top: .9rem; }}
     .evidence-list {{ padding-left: 1.2rem; font-size: .86rem; }}
-    .evidence-list li {{ margin: .5rem 0; }}
-    .evidence-type {{ color: var(--muted); font-size: .75rem; }}
+    .evidence-list li {{ margin: .75rem 0; overflow-wrap: anywhere; }}
+    .evidence-claim {{ display: block; }}
+    .evidence-meta {{ display: flex; flex-wrap: wrap; gap: .2rem .7rem; margin-top: .2rem; color: var(--muted); font-size: .75rem; }}
+    .evidence-meta a {{ font-weight: 650; }}
+    .evidence-date-note {{ color: var(--muted); font-size: .8rem; }}
     .muted {{ color: var(--muted); }}
     .sr-only {{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }}
     .table-wrap {{ display: none; overflow-x: auto; border: 1px solid var(--border); border-radius: 1rem; }}
